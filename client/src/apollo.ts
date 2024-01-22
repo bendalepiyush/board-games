@@ -6,25 +6,33 @@ import { createClient } from "graphql-ws";
 import { setContext } from "@apollo/client/link/context";
 import { getMainDefinition } from "@apollo/client/utilities";
 
+const adminSecret =
+  process.env.NEXT_PUBLIC_HASURA_ADMIN_SECRET ||
+  "SmdA05TfU563hdync7KZuAG4W0nRKmuJKF4AaBf9dLG1nsS1JUsYmb9e14UkAhQT";
+
 const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      "x-hasura-admin-secret": process.env.HASURA_ADMIN_SECRET,
+      "x-hasura-admin-secret": adminSecret,
     },
   };
 });
 
 const httpLink = new HttpLink({
-  uri: process.env.HASURA_BASE_URL,
+  uri: process.env.HASURA_BASE_URL || "http://localhost:8081/v1/graphql",
 });
+
+const wsurl: any = process.env.NEXT_PUBLIC_HASURA_BASE_URL_WO_HTTP
+  ? "ws://" + process.env.NEXT_PUBLIC_HASURA_BASE_URL_WO_HTTP
+  : "ws://localhost:8081/v1/graphql";
 
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: "ws://" + process.env.HASURA_BASE_URL_WO_HTTP,
+    url: wsurl,
     connectionParams: {
       headers: {
-        "x-hasura-admin-secret": process.env.HASURA_ADMIN_SECRET,
+        "x-hasura-admin-secret": adminSecret,
       },
     },
   })

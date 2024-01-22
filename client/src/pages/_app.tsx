@@ -22,11 +22,14 @@ export default function App({ Component, pageProps }: AppProps) {
   const documentVisibility = useDocumentVisibility();
 
   useEffect(() => {
-    const socket = io("http://localhost:3001", {
-      query: {
-        userId: "1",
-      },
-    });
+    const socket = io(
+      process.env.NEXT_PUBLIC_NODE_SERVER_URL || "http://localhost:3001",
+      {
+        query: {
+          userId: "1",
+        },
+      }
+    );
 
     return () => {
       socket.disconnect();
