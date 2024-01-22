@@ -1,0 +1,26 @@
+.actionIconContainer {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: #7c81ad;
+  user-select: none;
+
+  svg {
+    width: 25px;
+    height: 25px;
+    fill: #7c81ad;
+    margin: 0px 5px;
+  }
+}
+
+.actionIconContainer:hover {
+  background-color: #635985;
+  cursor: pointer;
+  color: white;
+
+  svg {
+    fill: white;
+  }
+}

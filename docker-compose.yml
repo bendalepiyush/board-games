@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   # Next.js Frontend
   nextjs:
@@ -7,6 +7,9 @@ services:
     depends_on:
       - expressjs
       - hasura
+    environment:
+      - HASURA_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}
+      - HASURA_BASE_URL=${HASURA_BASE_URL}
     networks:
       - my-network
 
@@ -27,7 +30,7 @@ services:
   # Express.js Backend
   expressjs:
     build:
-      context: ./server 
+      context: ./server
     environment:
       - NODE_ENV=production
       - HASURA_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}
@@ -48,7 +51,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: database
     volumes:
-      - ./data/postgres:/var/lib/postgresql/data 
+      - ./data/postgres:/var/lib/postgresql/data
     networks:
       - my-network
 

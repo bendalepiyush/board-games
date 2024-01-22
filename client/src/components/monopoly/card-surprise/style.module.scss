@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(38, 42, 76, 0.5);
+  color: #fff;
+  gap: 7px;
+
+  .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    &.reverse {
+      flex-direction: column-reverse;
+    }
+
+    &.left {
+      writing-mode: vertical-rl;
+    }
+
+    &.right {
+      writing-mode: vertical-lr;
+    }
+  }
+}
