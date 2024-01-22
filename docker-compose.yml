@@ -9,8 +9,8 @@ services:
       - hasura
     environment:
       - NEXT_PUBLIC_HASURA_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}
-      - NEXT_PUBLIC_HASURA_BASE_URL=http://hasura:8080/v1/graphql
-      - NEXT_PUBLIC_HASURA_BASE_URL_WO_HTTP=hasura:8080/v1/graphql
+      - NEXT_PUBLIC_HASURA_BASE_URL=http://hasura:8081/v1/graphql
+      - NEXT_PUBLIC_HASURA_BASE_URL_WO_HTTP=hasura:8081/v1/graphql
       - NEXT_PUBLIC_NODE_SERVER_URL=http://expressjs:3001
     networks:
       - my-network

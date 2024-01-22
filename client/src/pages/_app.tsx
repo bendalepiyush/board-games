@@ -22,6 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const documentVisibility = useDocumentVisibility();
 
   useEffect(() => {
+    console.log(process.env.NEXT_PUBLIC_NODE_SERVER_URL);
     const socket = io(
       process.env.NEXT_PUBLIC_NODE_SERVER_URL || "http://localhost:3001",
       {
