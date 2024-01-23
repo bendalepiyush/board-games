@@ -25,20 +25,35 @@ let connectionQueue = [];
 
 io.on("connection", (socket) => {
   const { userId } = socket.handshake.query;
+  const isUserExistIndex = connectionQueue.findIndex(
+    (item) => item["userId"] === userId
+  );
 
   if (userId) {
-    connectionQueue.push({
-      userId,
-      status: "ONLINE",
-    });
+    if (isUserExistIndex !== -1)
+      connectionQueue[isUserExistIndex] = {
+        userId,
+        status: "ONLINE",
+      };
+    else
+      connectionQueue.push({
+        userId,
+        status: "ONLINE",
+      });
   }
 
   socket.on("disconnect", () => {
     if (userId) {
-      connectionQueue.push({
-        userId,
-        status: "OFFLINE",
-      });
+      if (isUserExistIndex !== -1)
+        connectionQueue[isUserExistIndex] = {
+          userId,
+          status: "OFFLINE",
+        };
+      else
+        connectionQueue.push({
+          userId,
+          status: "OFFLINE",
+        });
     }
   });
 });
@@ -51,7 +66,7 @@ const updateUserConnections = async () => {
     const { userId, status } = connectionQueue[0];
     connectionQueue.shift();
     try {
-      const res = await updateUserState(userId, status);
+      await updateUserState(userId, status);
     } catch (err) {
       console.log("error", err);
     }
