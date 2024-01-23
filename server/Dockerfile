@@ -12,4 +12,6 @@ COPY . .
 
 EXPOSE 3001
 
-CMD [ "pm2-runtime", "npm", "--", "start" ]
+#CMD [ "pm2-runtime", "npm", "--", "start" ]
+
+CMD ["npx", "nodemon", "app.js"]

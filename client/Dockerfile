@@ -6,14 +6,20 @@ RUN npm install --global pm2
 
 COPY ./package*.json ./
 
-RUN npm install --production
+# RUN npm install --production
+
+RUN chown -R node:node /usr/app
+
+RUN npm install
 
 COPY ./ ./
 
-RUN npm run build
+# RUN npm run build
 
 EXPOSE 3000
 
 USER node
 
-CMD [ "pm2-runtime", "npm", "--", "start" ]
+#CMD [ "pm2-runtime", "npm", "--", "start" ]
+
+CMD [  "npm", "run", "dev" ]
