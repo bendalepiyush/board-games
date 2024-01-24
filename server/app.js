@@ -7,7 +7,7 @@ import { Server } from "socket.io";
 
 import { updateUserState } from "./services/user.js";
 
-const port = 3001;
+const port = 4000;
 
 const app = express();
 

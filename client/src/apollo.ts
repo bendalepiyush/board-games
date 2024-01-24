@@ -23,13 +23,10 @@ const httpLink = new HttpLink({
   uri: process.env.HASURA_BASE_URL || "http://localhost:8081/v1/graphql",
 });
 
-const wsurl: any = process.env.NEXT_PUBLIC_HASURA_BASE_URL_WO_HTTP
-  ? "ws://" + process.env.NEXT_PUBLIC_HASURA_BASE_URL_WO_HTTP
-  : "ws://localhost:8081/v1/graphql";
-
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: wsurl,
+    url:
+      process.env.NEXT_PUBLIC_HASURA_WS_URL || "ws://localhost:8081/v1/graphql",
     connectionParams: {
       headers: {
         "x-hasura-admin-secret": adminSecret,

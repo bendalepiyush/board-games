@@ -13,28 +13,28 @@ const Home = () => {
 
   // const { loading, error, data } = useQuery(qlQuery);
 
-  // const subQuery = gql`
-  //   subscription MySubscription {
-  //     user {
-  //       id
-  //       status
-  //     }
-  //   }
-  // `;
+  const subQuery = gql`
+    subscription MySubscription {
+      user {
+        id
+        status
+      }
+    }
+  `;
 
-  // const { loading, error, data } = useSubscription(subQuery);
+  const { loading, error, data } = useSubscription(subQuery);
 
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
-  // if (error) {
-  //   console.error(error);
-  //   return <div>Error!</div>;
-  // }
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    console.error(error);
+    return <div>Error!</div>;
+  }
 
-  // console.log(data.user[0].status);
+  console.log(data.user[0].status);
 
-  return <h1 style={{ color: "white" }}>Board Games 2024</h1>;
+  return <h1 style={{ color: "white" }}>{data.user}</h1>;
 };
 
 export default Home;

@@ -15,6 +15,7 @@ COPY amplify ./amplify
 COPY public ./public
 COPY next.config.mjs .
 COPY tsconfig.json .
+COPY .next ./.next
 
 
 CMD \

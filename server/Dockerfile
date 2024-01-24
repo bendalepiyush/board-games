@@ -10,7 +10,7 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 3001
+EXPOSE 4000
 
 #CMD [ "pm2-runtime", "npm", "--", "start" ]
 

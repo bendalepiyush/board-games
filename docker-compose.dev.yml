@@ -2,6 +2,7 @@ version: "3"
 services:
   # Next.js Frontend
   nextjs:
+    container_name: nextjs
     build:
       context: ./client
       dockerfile: dev.Dockerfile
@@ -10,9 +11,9 @@ services:
       - hasura
     environment:
       - NEXT_PUBLIC_HASURA_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}
-      - NEXT_PUBLIC_HASURA_BASE_URL=http://localhost:8081/v1/graphql
-      - NEXT_PUBLIC_HASURA_BASE_URL_WO_HTTP=localhost:8081/v1/graphql
-      - NEXT_PUBLIC_NODE_SERVER_URL=http://localhost:3001
+      - NEXT_PUBLIC_HASURA_BASE_URL=http://hasura:8080/v1/graphql
+      - NEXT_PUBLIC_HASURA_WS_URL=ws://hasura:8080/v1/graphql
+      - NEXT_PUBLIC_NODE_SERVER_URL=http://localhost:4000
     ports:
       - "3000:3000"
     networks:
@@ -20,6 +21,7 @@ services:
 
   # Nginx
   nginx:
+    container_name: nginx
     image: nginx:latest
     ports:
       - "80:80"
@@ -34,22 +36,24 @@ services:
 
   # Express.js Backend
   expressjs:
+    container_name: expressjs
     build:
       context: ./server
     environment:
       - NODE_ENV=production
       - HASURA_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}
-      - HASURA_BASE_URL=http://localhost:8081/v1/graphql
+      - HASURA_BASE_URL=http://hasura:8080/v1/graphql
     depends_on:
       - hasura
       - postgres
     ports:
-      - "3001:3001"
+      - "4000:4000"
     networks:
       - my-network
 
     # PostgreSQL Database
   postgres:
+    container_name: postgres
     image: postgres:latest
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -62,6 +66,7 @@ services:
 
   # Hasura GraphQL Engine
   hasura:
+    container_name: hasura
     image: hasura/graphql-engine:v2.36.2
     ports:
       - "8081:8080"
