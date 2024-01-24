@@ -23,14 +23,21 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     console.log(process.env.NEXT_PUBLIC_NODE_SERVER_URL);
-    const socket = io("http://localhost:4000", {
-      query: {
-        userId: "1",
-      },
+    // const socket = io(
+    //   process.env.NEXT_PUBLIC_NODE_SERVER_URL || "http://localhost:4000",
+    //   {
+    //     query: {
+    //       userId: "1",
+    //     },
+    //   }
+    // );
+
+    fetch(process.env.NEXT_PUBLIC_NODE_SERVER_URL || "").then((res) => {
+      console.log(res);
     });
 
     return () => {
-      socket.disconnect();
+      // socket.disconnect();
     };
   }, [documentVisibility]);
 
