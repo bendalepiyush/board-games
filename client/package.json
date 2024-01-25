@@ -13,7 +13,6 @@
     "react": "^18",
     "react-dom": "^18",
     "next": "14.1.0",
-    "aws-amplify": "^6.0.12",
     "axios": "^1.6.5",
     "graphql-ws": "^5.14.3",
     "sass": "^1.69.6",

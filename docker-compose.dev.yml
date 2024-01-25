@@ -10,7 +10,8 @@ services:
       POSTGRES_DB: database
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
-    network_mode: "host"
+    networks:
+      - my-network
 
   # Hasura GraphQL Engine
   hasura:
@@ -19,7 +20,7 @@ services:
     environment:
       HASURA_GRAPHQL_DATABASE_URL: ${HASURA_GRAPHQL_DATABASE_URL}
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      HASURA_GRAPHQL_ENABLE_CONSOLE: 1
+      HASURA_GRAPHQL_ENABLE_CONSOLE: ${HASURA_GRAPHQL_ENABLE_CONSOLE}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -h postgres -U $POSTGRES_USER"]
       interval: 2s
@@ -27,7 +28,10 @@ services:
       retries: 5
     depends_on:
       - postgres
-    network_mode: "host"
+    ports:
+      - "8081:8080"
+    networks:
+      - my-network
 
   # Express.js Backend
   express:
@@ -37,11 +41,14 @@ services:
     environment:
       NODE_ENV: production
       HASURA_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      HASURA_BASE_URL: http://localhost:8080/v1/graphql
+      HASURA_BASE_URL: http://hasura:8080/v1/graphql
     depends_on:
       - hasura
       - postgres
-    network_mode: "host"
+    ports:
+      - "4000:4000"
+    networks:
+      - my-network
 
   # Next.js Frontend
   nextjs:
@@ -54,10 +61,13 @@ services:
       - hasura
     environment:
       NEXT_PUBLIC_HASURA_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      NEXT_PUBLIC_HASURA_BASE_URL: http://localhost:8080/v1/graphql
-      NEXT_PUBLIC_HASURA_WS_URL: ws://localhost:8080/v1/graphql
+      NEXT_PUBLIC_HASURA_BASE_URL: http://localhost:8081/v1/graphql
+      NEXT_PUBLIC_HASURA_WS_URL: ws://localhost:8081/v1/graphql
       NEXT_PUBLIC_NODE_SERVER_URL: http://localhost:4000/
-    network_mode: "host"
+    ports:
+      - "3000:3000"
+    networks:
+      - my-network
 
   # # Nginx
   # nginx:
@@ -73,3 +83,6 @@ services:
   #     - expressjs
   #   networks:
   #     - my-network
+
+networks:
+  my-network:
