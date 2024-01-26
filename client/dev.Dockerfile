@@ -11,12 +11,11 @@ RUN \
   fi
 
 COPY src ./src
-COPY amplify ./amplify
 COPY public ./public
 COPY next.config.mjs .
 COPY tsconfig.json .
-COPY .next ./.next
 
+EXPOSE 3000
 
 CMD \
   if [ -f yarn.lock ]; then yarn dev; \

@@ -13,8 +13,6 @@ const saira = Saira_Condensed({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-Amplify.configure(awsmobile);
-
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <main className={saira.className}>

@@ -1,57 +1,6 @@
 version: "3"
 services:
-  # Next.js Frontend
-  nextjs:
-    container_name: nextjs
-    build:
-      context: ./client
-      dockerfile: dev.Dockerfile
-    depends_on:
-      - expressjs
-      - hasura
-    environment:
-      - NEXT_PUBLIC_HASURA_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}
-      - NEXT_PUBLIC_HASURA_BASE_URL=http://hasura:8080/v1/graphql
-      - NEXT_PUBLIC_HASURA_WS_URL=ws://hasura:8080/v1/graphql
-      - NEXT_PUBLIC_NODE_SERVER_URL=http://localhost:4000
-    ports:
-      - "3000:3000"
-    networks:
-      - my-network
-
-  # Nginx
-  nginx:
-    container_name: nginx
-    image: nginx:latest
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - nextjs
-      - hasura
-      - expressjs
-    networks:
-      - my-network
-
-  # Express.js Backend
-  expressjs:
-    container_name: expressjs
-    build:
-      context: ./server
-    environment:
-      - NODE_ENV=production
-      - HASURA_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}
-      - HASURA_BASE_URL=http://hasura:8080/v1/graphql
-    depends_on:
-      - hasura
-      - postgres
-    ports:
-      - "4000:4000"
-    networks:
-      - my-network
-
-    # PostgreSQL Database
+  # PostgreSQL Database
   postgres:
     container_name: postgres
     image: postgres:latest
@@ -67,22 +16,73 @@ services:
   # Hasura GraphQL Engine
   hasura:
     container_name: hasura
-    image: hasura/graphql-engine:v2.36.2
-    ports:
-      - "8081:8080"
+    image: hasura/graphql-engine:latest
     environment:
       HASURA_GRAPHQL_DATABASE_URL: ${HASURA_GRAPHQL_DATABASE_URL}
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      HASURA_GRAPHQL_ENABLE_CONSOLE: true
+      HASURA_GRAPHQL_ENABLE_CONSOLE: ${HASURA_GRAPHQL_ENABLE_CONSOLE}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -h postgres -U $POSTGRES_USER"]
-      interval: 10s
+      interval: 2s
       timeout: 5s
       retries: 5
     depends_on:
       - postgres
+    ports:
+      - "8081:8080"
     networks:
       - my-network
+
+  # Express.js Backend
+  express:
+    container_name: express
+    build:
+      context: ./server
+    environment:
+      NODE_ENV: production
+      HASURA_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
+      HASURA_BASE_URL: http://hasura:8080/v1/graphql
+    depends_on:
+      - hasura
+      - postgres
+    ports:
+      - "4000:4000"
+    networks:
+      - my-network
+
+  # Next.js Frontend
+  nextjs:
+    container_name: nextjs
+    build:
+      context: ./client
+      dockerfile: dev.Dockerfile
+    depends_on:
+      - express
+      - hasura
+    environment:
+      NEXT_PUBLIC_HASURA_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
+      NEXT_PUBLIC_HASURA_BASE_URL: http://localhost:8081/v1/graphql
+      NEXT_PUBLIC_HASURA_WS_URL: ws://localhost:8081/v1/graphql
+      NEXT_PUBLIC_NODE_SERVER_URL: http://localhost:4000/
+    ports:
+      - "3000:3000"
+    networks:
+      - my-network
+
+  # # Nginx
+  # nginx:
+  #   container_name: nginx
+  #   image: nginx:latest
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+  #   depends_on:
+  #     - nextjs
+  #     - hasura
+  #     - expressjs
+  #   networks:
+  #     - my-network
 
 networks:
   my-network:
