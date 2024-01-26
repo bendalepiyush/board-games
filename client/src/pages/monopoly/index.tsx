@@ -4,7 +4,6 @@ import Image from "next/image";
 
 import styles from "./style.module.scss";
 import { BASE_URL } from "@/js/constant";
-import AppHeader from "@/components/layout/app-header";
 import KeyIcon from "@/components/icons/key";
 import AccountIcon from "@/components/icons/account";
 
@@ -91,14 +90,12 @@ const Monopoly = () => {
 
   return (
     <div className={styles.mainContainer}>
-      <AppHeader />
-
       <div className={styles.mainBodyContainer}>
         <Image src="/dice.svg" width={200} height={200} alt="dice" />
         <h1>Board Games - Monopoly</h1>
         <h4>Rule the economy</h4>
 
-        <input type="text" value="Salty Bay" />
+        <input type="text" defaultValue="Salty Bay" />
 
         <br />
         <button className={styles.primaryButton}>Play</button>

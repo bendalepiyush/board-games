@@ -7,8 +7,7 @@ import { setContext } from "@apollo/client/link/context";
 import { getMainDefinition } from "@apollo/client/utilities";
 
 const adminSecret =
-  process.env.NEXT_PUBLIC_HASURA_ADMIN_SECRET ||
-  "SmdA05TfU563hdync7KZuAG4W0nRKmuJKF4AaBf9dLG1nsS1JUsYmb9e14UkAhQT";
+  process.env.NEXT_PUBLIC_HASURA_ADMIN_SECRET || "myadminsecretkey";
 
 const authLink = setContext((_, { headers }) => {
   return {
