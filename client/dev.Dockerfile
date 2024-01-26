@@ -11,7 +11,6 @@ RUN \
   fi
 
 COPY src ./src
-COPY amplify ./amplify
 COPY public ./public
 COPY next.config.mjs .
 COPY tsconfig.json .
