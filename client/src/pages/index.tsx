@@ -34,7 +34,7 @@ const Home = () => {
 
   // console.log(data.user[0].status);
 
-  return <h1 style={{ color: "white" }}>Board Games</h1>;
+  return <h1 style={{ color: "white" }}></h1>;
 };
 
 export default Home;

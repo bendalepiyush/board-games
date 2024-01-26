@@ -1,8 +1,6 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { Saira_Condensed } from "next/font/google";
-import { Amplify } from "aws-amplify";
-import awsmobile from "@/aws-exports";
 import { AuthProvider } from "@/context/auth";
 import { ApolloProvider } from "@apollo/client";
 import { apolloClient } from "@/apollo";
@@ -19,7 +17,6 @@ export default function App({ Component, pageProps }: AppProps) {
       <ApolloProvider client={apolloClient}>
         <AuthProvider>
           <AppHeader />
-
           <Component {...pageProps} />
         </AuthProvider>
       </ApolloProvider>
