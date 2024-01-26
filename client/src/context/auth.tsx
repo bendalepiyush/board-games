@@ -1,43 +1,73 @@
-import { createContext, useContext } from "react";
+// AuthContext.tsx
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
+import { getSocketClient } from "@/js/socket-client";
 
-export type SignUpParameters = {
-  username: string;
-  password: string;
-  email: string;
+type User = {
+  token: string | null;
+  username: string | null;
 };
 
-export type UserParameters = {
-  username: string;
-  userId: string;
-};
-
-export type SignInParameters = {
-  username: string;
-  password: string;
-};
-
-export type VerificationParameter = {
-  username: string;
-  token: string;
-};
-
-interface AuthContextType {
-  user: UserParameters | null;
-  login: (credentials: SignInParameters) => void;
-  register: (credentials: SignUpParameters) => void;
+type AuthContextProps = {
+  user: User;
+  login: (token: string, username: string) => void;
   logout: () => void;
-  verify: (credentials: VerificationParameter) => void;
-  isLoading: boolean;
-}
+};
 
-const AuthContext = createContext<AuthContextType | null>(null);
+type AuthProviderProps = {
+  children: ReactNode;
+};
 
-export const useAuth = () => {
+const AuthContext = createContext<AuthContextProps | undefined>(undefined);
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [user, setUser] = useState<User>({
+    token: null,
+    username: null,
+  });
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    const storedUsername = localStorage.getItem("username");
+
+    if (storedToken && storedUsername) {
+      setUser({ token: storedToken, username: storedUsername });
+      getSocketClient(storedToken);
+    }
+  }, []);
+
+  const login = (token: string, username: string) => {
+    setUser({ token, username });
+    localStorage.setItem("token", token);
+    localStorage.setItem("username", username);
+
+    getSocketClient(token);
+  };
+
+  const logout = () => {
+    setUser({ token: null, username: null });
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+
+    getSocketClient().disconnect();
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = (): AuthContextProps => {
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
-
-export default AuthContext;

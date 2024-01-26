@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 import styles from "./style.module.scss";
 import VolumeMuteIcon from "@/components/icons/volume-mute";
 import CartIcon from "@/components/icons/cart";
 import LoginIcon from "@/components/icons/login";
+import LogoutIcon from "@/components/icons/logout";
 import MenuIcon from "@/components/icons/menu";
 import ActionButton from "../action-button";
+import { useAuth } from "@/context/auth";
 
 const AppHeader: React.FC = () => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  const { user, logout } = useAuth();
+
+  const router = useRouter();
 
   useEffect(() => {
     const checkMobileView = () => {
@@ -29,8 +36,7 @@ const AppHeader: React.FC = () => {
   const [showLoginDialog, setShowLoginDialog] = useState<boolean>(false);
 
   const toggleLoginDialog = () => {
-    setShowMenuDialog(false);
-    setShowLoginDialog(!showLoginDialog);
+    router.push("/auth/login");
   };
 
   const [showMenuDialog, setShowMenuDialog] = useState<boolean>(false);
@@ -40,11 +46,16 @@ const AppHeader: React.FC = () => {
     setShowMenuDialog(!showMenuDialog);
   };
 
+  const logoutUser = () => {
+    logout();
+  };
+
   return (
     <div className={styles.headerContainer}>
       <ActionButton>
         <VolumeMuteIcon />
       </ActionButton>
+      <h1 style={{ color: "white" }}>{user.username}</h1>
       <div className={styles.rightContainer}>
         {isMobile ? (
           <div onClick={toggleMenuDialog}>
@@ -57,11 +68,19 @@ const AppHeader: React.FC = () => {
             <ActionButton text="Store">
               <CartIcon />
             </ActionButton>
-            <div onClick={toggleLoginDialog}>
-              <ActionButton text="Login">
-                <LoginIcon />
-              </ActionButton>
-            </div>
+            {user.token ? (
+              <div onClick={logoutUser}>
+                <ActionButton text="Logout">
+                  <LogoutIcon />
+                </ActionButton>
+              </div>
+            ) : (
+              <div onClick={toggleLoginDialog}>
+                <ActionButton text="Login">
+                  <LoginIcon />
+                </ActionButton>
+              </div>
+            )}
           </>
         )}
 

@@ -3,13 +3,10 @@ import type { AppProps } from "next/app";
 import { Saira_Condensed } from "next/font/google";
 import { Amplify } from "aws-amplify";
 import awsmobile from "@/aws-exports";
-import AuthProvider from "@/provider/auth";
+import { AuthProvider } from "@/context/auth";
 import { ApolloProvider } from "@apollo/client";
 import { apolloClient } from "@/apollo";
-import io from "socket.io-client";
-
-import { useEffect } from "react";
-import useDocumentVisibility from "@/js/documentVisibility";
+import AppHeader from "@/components/layout/app-header";
 
 const saira = Saira_Condensed({
   subsets: ["latin"],
@@ -19,25 +16,12 @@ const saira = Saira_Condensed({
 Amplify.configure(awsmobile);
 
 export default function App({ Component, pageProps }: AppProps) {
-  const documentVisibility = useDocumentVisibility();
-
-  useEffect(() => {
-    console.log(process.env.NEXT_PUBLIC_NODE_SERVER_URL);
-    const socket = io("http://localhost:4000", {
-      query: {
-        userId: "1",
-      },
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [documentVisibility]);
-
   return (
     <main className={saira.className}>
       <ApolloProvider client={apolloClient}>
         <AuthProvider>
+          <AppHeader />
+
           <Component {...pageProps} />
         </AuthProvider>
       </ApolloProvider>
