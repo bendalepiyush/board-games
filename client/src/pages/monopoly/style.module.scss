@@ -22,11 +22,14 @@
     background-color: #2d2445;
   }
 
+  button {
+    cursor: pointer;
+  }
+
   .primaryButton {
     border: none;
     color: white;
     font-size: 3em;
-    cursor: pointer;
     padding: 20px 65px;
     border-radius: 10px;
     background-color: #7747e0;

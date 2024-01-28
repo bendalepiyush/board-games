@@ -6,6 +6,7 @@ import { useAuth } from "@/context/auth";
 import styles from "./style.module.scss";
 import KeyIcon from "@/components/icons/key";
 import AccountIcon from "@/components/icons/account";
+import axios from "axios";
 
 const Monopoly = () => {
   const { user } = useAuth();
@@ -27,6 +28,21 @@ const Monopoly = () => {
     console.log("play game");
   };
 
+  const onCreatePrivateGame = async () => {
+    try {
+      const res = await axios.post("api/monopoly/create-game", undefined, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      router.replace(`/monopoly/room/${res.data.gameId}`);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.mainBodyContainer}>
@@ -46,7 +62,10 @@ const Monopoly = () => {
             <AccountIcon />
             All rooms
           </button>
-          <button className={styles.secondaryButton}>
+          <button
+            className={styles.secondaryButton}
+            onClick={onCreatePrivateGame}
+          >
             <KeyIcon />
             Create a private game
           </button>

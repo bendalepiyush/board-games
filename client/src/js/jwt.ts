@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { jwtPayload } from "@/types/jwt";
 
 export const signJwtToken = (payload: any) => {
   const SECRET: string = process.env.JWT_SECRET_KEY || "";
@@ -7,5 +8,5 @@ export const signJwtToken = (payload: any) => {
 
 export const verifyToken = (token: string) => {
   const SECRET: string = process.env.JWT_SECRET_KEY || "";
-  return jwt.verify(token, SECRET);
+  return jwt.verify(token, SECRET) as jwtPayload;
 };
