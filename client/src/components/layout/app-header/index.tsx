@@ -55,7 +55,6 @@ const AppHeader: React.FC = () => {
       <ActionButton>
         <VolumeMuteIcon />
       </ActionButton>
-      <h1 style={{ color: "white" }}>{user.username}</h1>
       <div className={styles.rightContainer}>
         {isMobile ? (
           <div onClick={toggleMenuDialog}>

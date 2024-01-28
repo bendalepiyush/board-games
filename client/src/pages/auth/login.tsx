@@ -1,19 +1,19 @@
+import { useEffect } from "react";
+
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { io, Socket } from "socket.io-client";
 import { useAuth } from "@/context/auth";
-
-type SocketClient = {
-  socket: Socket;
-  connect: () => void;
-  disconnect: () => void;
-  reconnect: () => void;
-};
 
 const Login = () => {
   const router = useRouter();
-  const { login, logout } = useAuth();
+  const { user, login, logout } = useAuth();
+
+  useEffect(() => {
+    if (user.username) {
+      router.replace("/monopoly");
+    }
+  }, [router, user]);
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -36,6 +36,8 @@ const Login = () => {
       const { token, username } = response.data;
 
       login(token, username);
+
+      router.replace("/monopoly");
     } catch (error: any) {
       console.error("Error logging in:", error.message);
     }
