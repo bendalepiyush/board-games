@@ -7,12 +7,34 @@ import styles from "./style.module.scss";
 import KeyIcon from "@/components/icons/key";
 import AccountIcon from "@/components/icons/account";
 import axios from "axios";
+import AppLayout from "@/components/layout";
 
 const Monopoly = () => {
   const { user } = useAuth();
   const router = useRouter();
 
   const [username, setUsername] = useState<string>("");
+
+  // const subQuery = gql`
+  //   subscription MySubscription {
+  //     user {
+  //       id
+  //       status
+  //     }
+  //   }
+  // `;
+
+  // const { loading, error, data } = useSubscription(subQuery);
+
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
+  // if (error) {
+  //   console.error(error);
+  //   return <div>Error!</div>;
+  // }
+
+  // console.log(data.user[0].status);
 
   useEffect(() => {
     if (!localStorage.getItem("username")) {
@@ -44,34 +66,36 @@ const Monopoly = () => {
   };
 
   return (
-    <div className={styles.mainContainer}>
-      <div className={styles.mainBodyContainer}>
-        <Image src="/dice.svg" width={200} height={200} alt="dice" />
-        <h1>Board Games - Monopoly</h1>
-        <h4>Rule the economy</h4>
+    <AppLayout>
+      <div className={styles.mainContainer}>
+        <div className={styles.mainBodyContainer}>
+          <Image src="/dice.svg" width={200} height={200} alt="dice" />
+          <h1>Board Games - Monopoly</h1>
+          <h4>Rule the economy</h4>
 
-        <input type="text" value={username} disabled />
+          <input type="text" value={username} disabled />
 
-        <br />
-        <button className={styles.primaryButton} onClick={playGame}>
-          Play
-        </button>
-
-        <div className={styles.secondaryButtonHolder}>
-          <button className={styles.secondaryButton}>
-            <AccountIcon />
-            All rooms
+          <br />
+          <button className={styles.primaryButton} onClick={playGame}>
+            Play
           </button>
-          <button
-            className={styles.secondaryButton}
-            onClick={onCreatePrivateGame}
-          >
-            <KeyIcon />
-            Create a private game
-          </button>
+
+          <div className={styles.secondaryButtonHolder}>
+            <button className={styles.secondaryButton}>
+              <AccountIcon />
+              All rooms
+            </button>
+            <button
+              className={styles.secondaryButton}
+              onClick={onCreatePrivateGame}
+            >
+              <KeyIcon />
+              Create a private game
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </AppLayout>
   );
 };
 
