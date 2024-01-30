@@ -66,15 +66,20 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
       return res.status(400).json({ error: "Invalid gameId." });
     }
 
-    if (data.monopoly_game_by_pk.player_sequence.includes(userId)) {
-      return res.status(200).json({ data });
+    let role = "VIEWER";
+
+    if (data.monopoly_game_by_pk.admin === userId) {
+      role = "ADMIN";
+    } else if (data.monopoly_game_by_pk.player_sequence.includes(userId)) {
+      role = "PARTICIPANT";
     }
 
     if (
+      !data.monopoly_game_by_pk.player_sequence.includes(userId) &&
       data.monopoly_game_by_pk.player_sequence.length <
-      data.monopoly_game_by_pk.settings.maxPlayers
+        data.monopoly_game_by_pk.settings.maxPlayers
     ) {
-      const addParticipantGameResult = await apolloClient.mutate({
+      await apolloClient.mutate({
         mutation: addParticipantQuery,
         variables: {
           gameId,
@@ -82,10 +87,9 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
           playerSequence: [...data.monopoly_game_by_pk.player_sequence, userId],
         },
       });
-      return res.json(addParticipantGameResult);
-    } else {
-      return res.json({ access: "View ONLY" });
     }
+
+    return res.status(200).json({ role });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }

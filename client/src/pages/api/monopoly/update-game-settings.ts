@@ -46,6 +46,7 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
     randomPlayerOrder,
     vacationCashAllowed,
     x2RentOnFullSet,
+    maxPlayers,
   } = req.body;
 
   try {
@@ -55,7 +56,7 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
         gameId,
         adminId: userId,
         settings: {
-          maxPlayers: 2,
+          maxPlayers,
           privateRoom,
           onlyLoggedInUserAllowed: true,
           auction,

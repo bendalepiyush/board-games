@@ -1,35 +1,26 @@
 import { ProtectRoute } from "@/components/protected-route";
 import styles from "./style.module.scss";
 import MonopolyBoard from "@/components/monopoly/board";
-import { useAuth } from "@/context/auth";
 import { useRouter } from "next/router";
-import { SetStateAction, useEffect, useState } from "react";
-import axios from "axios";
-import AccountGroupIcon from "@/components/icons/account-group";
+import { useEffect, useRef, useState } from "react";
 import Switch from "@/components/monopoly/switch";
-import { gql, useQuery, useSubscription } from "@apollo/client";
+import { gql, useSubscription } from "@apollo/client";
+import { makePostApiCall } from "@/js/api";
+import MdiIcon from "@/components/mdi-icon";
 
 const Room = () => {
   const router = useRouter();
   const { id } = router.query;
+  const [role, setRole] = useState<string>("VIEWER");
 
   useEffect(() => {
     const joinGame = async (gameId: string) => {
       try {
-        const res = await axios.post(
-          "/api/monopoly/join-game",
-          {
-            gameId,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
+        const res = await makePostApiCall("api/monopoly/join-game", {
+          gameId,
+        });
 
-        console.log(res);
+        setRole(res.data.role);
       } catch (error) {
         console.error("Error fetching game details:", error);
       }
@@ -41,22 +32,6 @@ const Room = () => {
     }
   }, [id]);
 
-  const [selectedOption, setSelectedOption] = useState("option1");
-
-  const handleSelectChange = (event: {
-    target: { value: SetStateAction<string> };
-  }) => {
-    setSelectedOption(event.target.value);
-    console.log(event.target.value);
-  };
-
-  const selectOptions = [
-    { label: "1", value: 1 },
-    { label: "2", value: 2 },
-    { label: "3", value: 3 },
-    { label: "4", value: 4 },
-  ];
-
   const [privateRoom, setPrivateRoom] = useState<boolean>(true);
   const [auction, setAuction] = useState<boolean>(false);
   const [evenBuild, setEvenBuild] = useState<boolean>(false);
@@ -66,6 +41,14 @@ const Room = () => {
   const [vacationCashAllowed, setVacationCashAllowed] =
     useState<boolean>(false);
   const [x2RentOnFullSet, setX2RentOnFullSet] = useState<boolean>(false);
+
+  const [maxPlayer, setMaxPlayer] = useState<number>(4);
+  const maxPlayerOptions = [
+    { label: "1", value: 1 },
+    { label: "2", value: 2 },
+    { label: "3", value: 3 },
+    { label: "4", value: 4 },
+  ];
 
   const handlePrivateRoomToggle = () => {
     setPrivateRoom((prevSwitch) => !prevSwitch);
@@ -95,97 +78,138 @@ const Room = () => {
     setX2RentOnFullSet((prevSwitch) => !prevSwitch);
   };
 
+  const handleMaxPlayerChange = (event: any) => {
+    setMaxPlayer(parseInt(event.target.value));
+  };
+
   const options = [
     {
+      type: "section",
+      title: "Game settings",
+    },
+    {
+      type: "select",
+      mainText: "Maximum players",
+      subText: "How many players can join the game",
+      selectHandle: handleMaxPlayerChange,
+      options: maxPlayerOptions,
+      selectedOption: maxPlayer,
+      icon: "account-group",
+    },
+    {
+      type: "switch",
       mainText: "Private room",
       subText: "Private rooms can be accessed using the room URL only",
       handle: handlePrivateRoomToggle,
       state: privateRoom,
+      icon: "key",
     },
     {
-      mainText: "Auction",
-      subText:
-        "If someone skips purchasing the property landed on, it will be sold to the highest bidder",
-      handle: handleAuctionToogle,
-      state: auction,
+      type: "divider",
     },
     {
-      mainText: "Even build",
-      subText:
-        "Houses and hotels must be built up and sold off evenly within a property set",
-      handle: handleEvenBuildToggle,
-      state: evenBuild,
+      type: "section",
+      title: "Gameplay rules",
     },
     {
-      mainText: "Don't collect rent while in prison",
-      subText:
-        "Rent will not be collected when landing on properties whose owners are in prison",
-      handle: handleNoRentCollectionInPrisonToggle,
-      state: noRentCollectionInPrison,
-    },
-    {
-      mainText: "Randomize player order",
-      subText: "Randomly reorder players at the beginning of the game",
-      handle: handleRandomPlayerOrderToggle,
-      state: randomPlayerOrder,
-    },
-    {
-      mainText: "Vacation cash",
-      subText:
-        "If a player lands on Vacation, all collected money from taxes and bank payments will be earned",
-      handle: handleVacationCashAllowedToggle,
-      state: vacationCashAllowed,
-    },
-    {
+      type: "switch",
       mainText: "x2 rent on full-set properties",
       subText:
         "If a player owns a full property set, the base rent payment will be doubled",
       handle: handleX2RentOnFullSetToggle,
       state: x2RentOnFullSet,
+      icon: "database",
+    },
+    {
+      type: "switch",
+      mainText: "Vacation cash",
+      subText:
+        "If a player lands on Vacation, all collected money from taxes and bank payments will be earned",
+      handle: handleVacationCashAllowedToggle,
+      state: vacationCashAllowed,
+      icon: "vacation",
+    },
+    {
+      type: "switch",
+      mainText: "Auction",
+      subText:
+        "If someone skips purchasing the property landed on, it will be sold to the highest bidder",
+      handle: handleAuctionToogle,
+      state: auction,
+      icon: "auction",
+    },
+    {
+      type: "switch",
+      mainText: "Don't collect rent while in prison",
+      subText:
+        "Rent will not be collected when landing on properties whose owners are in prison",
+      handle: handleNoRentCollectionInPrisonToggle,
+      state: noRentCollectionInPrison,
+      icon: "down-trend",
+    },
+    {
+      type: "switch",
+      mainText: "Even build",
+      subText:
+        "Houses and hotels must be built up and sold off evenly within a property set",
+      handle: handleEvenBuildToggle,
+      state: evenBuild,
+      icon: "house",
+    },
+
+    {
+      type: "switch",
+      mainText: "Randomize player order",
+      subText: "Randomly reorder players at the beginning of the game",
+      handle: handleRandomPlayerOrderToggle,
+      state: randomPlayerOrder,
+      icon: "sync",
     },
   ];
 
+  const isInitialRender = useRef(true);
+
   useEffect(() => {
     const syncSettings = async () => {
+      if (isInitialRender.current) {
+        isInitialRender.current = false;
+        return;
+      }
+
       try {
-        const res = await axios.post(
-          "http://localhost:3000/api/monopoly/update-game-settings",
-          {
-            gameId: "f8c0f0bf-e94c-496e-a0cc-b4ede248316b",
-            maxPlayers: 4,
-            privateRoom: privateRoom,
-            onlyLoggedInUserAllowed: true,
-            auction: auction,
-            evenBuild: evenBuild,
-            noRentCollectionInPrison: noRentCollectionInPrison,
-            randomPlayerOrder: randomPlayerOrder,
-            startingCash: 5000,
-            vacationCashAllowed: vacationCashAllowed,
-            currentVacationCash: 2000,
-            x2RentOnFullSet: x2RentOnFullSet,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-        console.log(res);
+        const res = await makePostApiCall("api/monopoly/update-game-settings", {
+          gameId: id,
+          maxPlayers: maxPlayer,
+          privateRoom: privateRoom,
+          x2RentOnFullSet: x2RentOnFullSet,
+          vacationCashAllowed: vacationCashAllowed,
+          auction: auction,
+          noRentCollectionInPrison: noRentCollectionInPrison,
+          evenBuild: evenBuild,
+          randomPlayerOrder: randomPlayerOrder,
+          onlyLoggedInUserAllowed: true,
+          startingCash: 5000,
+          currentVacationCash: 2000,
+        });
       } catch (err) {
         console.error(err);
       }
     };
 
-    syncSettings();
+    if (role === "ADMIN") {
+      syncSettings();
+    }
   }, [
+    id,
+    maxPlayer,
     privateRoom,
-    auction,
-    evenBuild,
-    noRentCollectionInPrison,
-    randomPlayerOrder,
-    vacationCashAllowed,
     x2RentOnFullSet,
+    vacationCashAllowed,
+    auction,
+    noRentCollectionInPrison,
+    evenBuild,
+    randomPlayerOrder,
+    role,
   ]);
 
   const gameSubscription = gql`
@@ -202,10 +226,25 @@ const Room = () => {
 
   useEffect(() => {
     if (data && data.monopoly_game && data.monopoly_game.length > 0) {
-      const newAuction = data.monopoly_game[0].settings.auction;
-      console.log(newAuction);
+      const {
+        maxPlayers,
+        privateRoom,
+        x2RentOnFullSet,
+        vacationCashAllowed,
+        auction,
+        noRentCollectionInPrison,
+        evenBuild,
+        randomPlayerOrder,
+      } = data.monopoly_game[0].settings;
 
-      setAuction(newAuction);
+      setMaxPlayer(maxPlayers);
+      setPrivateRoom(privateRoom);
+      setX2RentOnFullSet(x2RentOnFullSet);
+      setVacationCashAllowed(vacationCashAllowed);
+      setAuction(auction);
+      setNoRentCollectionInPrison(noRentCollectionInPrison);
+      setEvenBuild(evenBuild);
+      setRandomPlayerOrder(randomPlayerOrder);
     }
   }, [data]);
 
@@ -225,48 +264,66 @@ const Room = () => {
         <MonopolyBoard />
         <div style={{ color: "white" }}>
           <div className={styles.card}>
-            <h2 className={styles.title}>
-              Game settings - {data.monopoly_game[0].settings.auction}
-            </h2>
-            {/* <div className={styles.optionContainer}>
-              <div className={styles.icon}>
-                <AccountGroupIcon />
-              </div>
-              <div>
-                <h3 className={styles.option}>Maximum players</h3>
-                <p className={styles.subText}>
-                  How many players can join the game
-                </p>
-              </div>
-              <div>
-                <select value={selectedOption} onChange={handleSelectChange}>
-                  {selectOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div> */}
-
             {options.map((option, index) => {
-              return (
-                <div className={styles.optionContainer} key={index}>
-                  <div className={styles.icon}>
-                    <AccountGroupIcon />
-                  </div>
-                  <div>
-                    <h3 className={styles.option}>{option.mainText}</h3>
-                    <p className={styles.subText}>{option.subText}</p>
-                  </div>
-                  <div>
-                    <Switch onClick={option.handle} isSwitched={option.state} />
-                  </div>
-                </div>
-              );
-            })}
+              if (option.type === "section") {
+                return (
+                  <h2 key={index} className={styles.title}>
+                    {option.title}
+                  </h2>
+                );
+              }
 
-            <h2 className={styles.title}>Gameplay rules</h2>
+              if (option.type === "select") {
+                return (
+                  <div className={styles.optionContainer} key={index}>
+                    <div className={styles.icon}>
+                      <MdiIcon icon={option.icon ? option.icon : ""} />
+                    </div>
+                    <div className={styles.textHolder}>
+                      <h3 className={styles.option}>{option.mainText}</h3>
+                      <p className={styles.subText}>{option.subText}</p>
+                    </div>
+                    <div>
+                      <select
+                        value={option.selectedOption}
+                        onChange={option.selectHandle}
+                      >
+                        {option.options &&
+                          option.options.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  </div>
+                );
+              }
+
+              if (option.type === "switch") {
+                return (
+                  <div className={styles.optionContainer} key={index}>
+                    <div className={styles.icon}>
+                      <MdiIcon icon={option.icon ? option.icon : ""} />
+                    </div>
+                    <div className={styles.textHolder}>
+                      <h3 className={styles.option}>{option.mainText}</h3>
+                      <p className={styles.subText}>{option.subText}</p>
+                    </div>
+                    <div>
+                      <Switch
+                        onClick={option.handle ? option.handle : () => {}}
+                        isSwitched={option.state ? option.state : false}
+                      />
+                    </div>
+                  </div>
+                );
+              }
+
+              if (option.type === "divider") {
+                return <div className={styles.divider} key={index}></div>;
+              }
+            })}
           </div>
         </div>
       </div>
