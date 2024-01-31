@@ -1,0 +1,59 @@
+.card {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #29203f;
+
+  .divider {
+    height: 1px;
+    background-color: #8f80b3;
+    margin: 10px;
+  }
+
+  .title {
+    font-size: 1em;
+    color: #8f80b3;
+    text-align: center;
+  }
+
+  .optionContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    .icon {
+      margin: 5px;
+      width: 25px;
+      height: 25px;
+      fill: #8f80b3;
+    }
+
+    .textHolder {
+      width: 80%;
+    }
+
+    .option {
+      font-size: 1.2em;
+    }
+
+    .subText {
+      color: #8f80b3;
+      font-size: 0.8em;
+    }
+
+    select {
+      border: none;
+      padding: 5px;
+      outline: none;
+      color: white;
+      font-size: 0.7em;
+      border-radius: 6px;
+      background-color: #3e3752;
+    }
+
+    .disabled {
+      cursor: not-allowed;
+    }
+  }
+}
