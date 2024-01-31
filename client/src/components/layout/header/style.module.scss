@@ -1,0 +1,43 @@
+.sticky {
+  position: absolute;
+  width: 100%;
+  z-index: 99;
+  top: 0;
+}
+
+.headerContainer {
+  margin: auto;
+  max-width: 1600px;
+  display: grid;
+  grid-template-columns: 1fr 100px 1fr;
+  padding: 20px 0;
+  justify-content: space-between;
+  align-items: center;
+
+  .rightAlign {
+    display: flex;
+    justify-content: flex-end;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .loginbutton {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 18px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .coins {
+    color: #ffb71a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    border: 1px solid #ffb71a;
+    padding: 10px 20px;
+    border-radius: 30px;
+  }
+}

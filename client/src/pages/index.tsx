@@ -1,40 +1,41 @@
-import { gql, useQuery, useSubscription } from "@apollo/client";
-import { useEffect } from "react";
+import Header from "@/components/layout/header";
+import styles from "./style.module.scss";
 
 const Home = () => {
-  // const qlQuery = gql`
-  //   query MyQuery {
-  //     user {
-  //       status
-  //       id
-  //     }
-  //   }
-  // `;
+  return (
+    <div>
+      <div>
+        <div className={styles.header}>
+          <Header />
+          <div className={styles.content}>
+            <h1>The Universe of Board Game</h1>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              Suspendisse dictum at massa nec venenatis.
+            </p>
+          </div>
+        </div>
 
-  // const { loading, error, data } = useQuery(qlQuery);
-
-  // const subQuery = gql`
-  //   subscription MySubscription {
-  //     user {
-  //       id
-  //       status
-  //     }
-  //   }
-  // `;
-
-  // const { loading, error, data } = useSubscription(subQuery);
-
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
-  // if (error) {
-  //   console.error(error);
-  //   return <div>Error!</div>;
-  // }
-
-  // console.log(data.user[0].status);
-
-  return <h1 style={{ color: "white" }}></h1>;
+        <div className={styles.games}>
+          <div className={styles.monopolycard}>
+            <div className={styles.container}>
+              <div className={styles.content}>
+                <h2>Monopoly</h2>
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Suspendisse dictum at massa nec venenatis.
+                </p>
+                <button className={styles.button} role="button">
+                  Play Now
+                </button>
+              </div>
+            </div>
+            <img src="/monopoly.png" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Home;

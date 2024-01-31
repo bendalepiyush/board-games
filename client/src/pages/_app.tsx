@@ -4,7 +4,6 @@ import { Saira_Condensed } from "next/font/google";
 import { AuthProvider } from "@/context/auth";
 import { ApolloProvider } from "@apollo/client";
 import { apolloClient } from "@/apollo";
-import AppHeader from "@/components/layout/app-header";
 
 const saira = Saira_Condensed({
   subsets: ["latin"],
@@ -16,7 +15,6 @@ export default function App({ Component, pageProps }: AppProps) {
     <main className={saira.className}>
       <ApolloProvider client={apolloClient}>
         <AuthProvider>
-          <AppHeader />
           <Component {...pageProps} />
         </AuthProvider>
       </ApolloProvider>
