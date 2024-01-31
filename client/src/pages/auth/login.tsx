@@ -10,10 +10,10 @@ const Login = () => {
   const { user, login, logout } = useAuth();
 
   useEffect(() => {
-    if (user.username) {
+    if (localStorage.getItem("token")) {
       router.replace("/monopoly");
     }
-  }, [router, user]);
+  }, [router]);
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -35,9 +35,13 @@ const Login = () => {
 
       const { token, username } = response.data;
 
+      const redirectUrl = router.query.redirect || "/monopoly";
+      console.log("before login");
       login(token, username);
+      localStorage.setItem("token", token);
+      console.log("after login");
 
-      router.replace("/monopoly");
+      router.push(redirectUrl.toString());
     } catch (error: any) {
       console.error("Error logging in:", error.message);
     }

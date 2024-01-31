@@ -1,5 +1,6 @@
 import { gql, useQuery, useSubscription } from "@apollo/client";
 import { useEffect } from "react";
+import AppLayout from "@/components/layout";
 
 const Home = () => {
   // const qlQuery = gql`
@@ -34,7 +35,11 @@ const Home = () => {
 
   // console.log(data.user[0].status);
 
-  return <h1 style={{ color: "white" }}></h1>;
+  return (
+    <AppLayout>
+      <h1 style={{ color: "white" }}></h1>;
+    </AppLayout>
+  );
 };
 
 export default Home;
