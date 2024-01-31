@@ -36,18 +36,19 @@ const CardSurprise: React.FC<SurpriseCard> = ({
   }, []);
 
   return (
-    <div className={styles.container} ref={ref}>
-      <div
-        className={`${styles.content}
-        ${cardPosition !== "top" && `${styles.reverse}`}
-        ${cardPosition === "right" && `${styles.right}`}
-        ${cardPosition === "left" && `${styles.left}`}
-      `}
-      >
-        <p>{title}</p>
-        <img width={"50px"} height={"50px"} src={imagePath} alt="" />
-      </div>
-    </div>
+    <div>S</div>
+    // <div className={styles.container} ref={ref}>
+    //   <div
+    //     className={`${styles.content}
+    //     ${cardPosition !== "top" && `${styles.reverse}`}
+    //     ${cardPosition === "right" && `${styles.right}`}
+    //     ${cardPosition === "left" && `${styles.left}`}
+    //   `}
+    //   >
+    //     <p>{title}</p>
+    //     <img width={"50px"} height={"50px"} src={imagePath} alt="" />
+    //   </div>
+    // </div>
   );
 };
 

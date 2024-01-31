@@ -14,6 +14,27 @@ const Monopoly = () => {
 
   const [username, setUsername] = useState<string>("");
 
+  // const subQuery = gql`
+  //   subscription MySubscription {
+  //     user {
+  //       id
+  //       status
+  //     }
+  //   }
+  // `;
+
+  // const { loading, error, data } = useSubscription(subQuery);
+
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
+  // if (error) {
+  //   console.error(error);
+  //   return <div>Error!</div>;
+  // }
+
+  // console.log(data.user[0].status);
+
   useEffect(() => {
     if (!localStorage.getItem("username")) {
       router.replace("/auth/login");
