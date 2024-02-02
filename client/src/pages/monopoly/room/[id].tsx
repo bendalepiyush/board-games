@@ -45,13 +45,96 @@ const Room = () => {
     }
   }, [id, router]);
 
+  const gameSubscription = gql`
+    subscription gameSubscription {
+      monopoly_game_by_pk(id: "${gameId}") {
+        admin
+        current_player_turn_id
+        game_state
+        id
+        map
+        monopoly_game_participants {
+          current_position
+          available_cash
+          id
+          is_bankrupt
+        }
+        player_sequence
+        settings
+      }
+    }
+  `;
+
+  const [gameSettings, setGameSettings] = useState<{
+    privateRoom: boolean;
+    maxPlayers: number;
+    x2RentOnFullSet: boolean;
+    vacationCashAllowed: boolean;
+    auction: boolean;
+    noRentCollectionInPrison: boolean;
+    evenBuild: boolean;
+    randomPlayerOrder: boolean;
+  }>({
+    privateRoom: true,
+    maxPlayers: 4,
+    x2RentOnFullSet: true,
+    vacationCashAllowed: true,
+    auction: true,
+    noRentCollectionInPrison: true,
+    evenBuild: true,
+    randomPlayerOrder: true,
+  });
+
+  const { loading, error, data } = useSubscription(gameSubscription);
+
+  useEffect(() => {
+    if (data && data.monopoly_game_by_pk) {
+      console.log(data.monopoly_game_by_pk.settings);
+
+      const {
+        privateRoom,
+        maxPlayers,
+        x2RentOnFullSet,
+        vacationCashAllowed,
+        auction,
+        noRentCollectionInPrison,
+        evenBuild,
+        randomPlayerOrder,
+      } = data.monopoly_game_by_pk.settings;
+
+      setGameSettings({
+        privateRoom,
+        maxPlayers,
+        x2RentOnFullSet,
+        vacationCashAllowed,
+        auction,
+        noRentCollectionInPrison,
+        evenBuild,
+        randomPlayerOrder,
+      });
+    }
+  }, [data]);
+
+  if (loading) {
+    return <div>Loading..</div>;
+  }
+
+  if (error) {
+    console.log(error);
+    return <div>Error</div>;
+  }
+
   return (
     <ProtectRoute>
       <div className={styles.container}>
         <div>Left Section</div>
         <MonopolyBoard />
         <div>
-          <GameSetting gameId={gameId} role={role} />
+          <GameSetting
+            gameId={gameId}
+            role={role}
+            gameSettings={gameSettings}
+          />
         </div>
       </div>
     </ProtectRoute>
