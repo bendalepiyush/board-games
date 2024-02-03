@@ -8,7 +8,30 @@ import CardSurprise from "../card-surprise";
 import { CLASSIC_MAP } from "@/maps/classic-map";
 import CardCompany from "../card-company";
 
-const MonopolyBoard = () => {
+type MonopolyBoardProps = {
+  startGame: () => void;
+  gameState: string;
+  rollDice: () => void;
+  endTurn: () => void;
+  gameSettings: {
+    userId: string;
+    cureentPlayerTurnId: string;
+    rollDice: boolean;
+  };
+  diceValues: {
+    diceOne: number;
+    diceTwo: number;
+  };
+};
+
+const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
+  startGame,
+  gameState,
+  rollDice,
+  gameSettings,
+  endTurn,
+  diceValues,
+}) => {
   return (
     <div className={styles.container}>
       {CLASSIC_MAP.map((item, index) => {
@@ -125,6 +148,21 @@ const MonopolyBoard = () => {
               }}
             >
               Center
+              {gameState === "CREATED" && (
+                <button onClick={startGame}>Start Game</button>
+              )}
+              {gameState === "STARTED" &&
+                gameSettings.userId === gameSettings.cureentPlayerTurnId &&
+                (gameSettings.rollDice ? (
+                  <button onClick={rollDice}>Roll the dice</button>
+                ) : (
+                  <button onClick={endTurn}>End Turn</button>
+                ))}
+              <h1 style={{ color: "white", margin: "40px" }}>
+                <span>{diceValues.diceOne}</span>
+                <span> - </span>
+                <span>{diceValues.diceTwo}</span>
+              </h1>
             </div>
           );
         }

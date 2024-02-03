@@ -17,6 +17,16 @@ const Room = () => {
     "VIEWER"
   );
   const [gameId, setGameId] = useState<string>("");
+  const [gameState, setGameState] = useState<string>("");
+  const [startingCash, setStartingCash] = useState<number>(0);
+  const [playerSequence, setPlayerSequence] = useState<string[]>([]);
+  const [currentUserId, setCurrentUserId] = useState<string>("");
+  const [currentPlayerTurnId, setCurrentPlayerTurnId] = useState<string>("");
+  const [isRollDice, setIsRollDice] = useState<boolean>(true);
+  const [diceValues, setDiceValues] = useState({
+    diceOne: 0,
+    diceTwo: 0,
+  });
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -30,6 +40,7 @@ const Room = () => {
         });
 
         setRole(res.data.role);
+        setCurrentUserId(res.data.id);
       } catch (error) {
         console.error("Error fetching game details:", error);
         router.push(
@@ -53,11 +64,13 @@ const Room = () => {
         game_state
         id
         map
+        roll_dice
         monopoly_game_participants {
           current_position
           available_cash
           id
           is_bankrupt
+          player_id
         }
         player_sequence
         settings
@@ -74,6 +87,7 @@ const Room = () => {
     noRentCollectionInPrison: boolean;
     evenBuild: boolean;
     randomPlayerOrder: boolean;
+    startingCash: number;
   }>({
     privateRoom: true,
     maxPlayers: 4,
@@ -83,14 +97,13 @@ const Room = () => {
     noRentCollectionInPrison: true,
     evenBuild: true,
     randomPlayerOrder: true,
+    startingCash: 0,
   });
 
   const { loading, error, data } = useSubscription(gameSubscription);
 
   useEffect(() => {
     if (data && data.monopoly_game_by_pk) {
-      console.log(data.monopoly_game_by_pk.settings);
-
       const {
         privateRoom,
         maxPlayers,
@@ -100,6 +113,7 @@ const Room = () => {
         noRentCollectionInPrison,
         evenBuild,
         randomPlayerOrder,
+        startingCash,
       } = data.monopoly_game_by_pk.settings;
 
       setGameSettings({
@@ -111,7 +125,32 @@ const Room = () => {
         noRentCollectionInPrison,
         evenBuild,
         randomPlayerOrder,
+        startingCash,
       });
+    }
+
+    if (data) {
+      if (data.monopoly_game_by_pk) {
+        console.log(data.monopoly_game_by_pk);
+
+        if (data.monopoly_game_by_pk.game_state) {
+          setGameState(data.monopoly_game_by_pk.game_state);
+        }
+
+        if (data.monopoly_game_by_pk.player_sequence) {
+          setPlayerSequence(data.monopoly_game_by_pk.player_sequence);
+        }
+
+        if (data.monopoly_game_by_pk.current_player_turn_id) {
+          setCurrentPlayerTurnId(
+            data.monopoly_game_by_pk.current_player_turn_id
+          );
+        }
+
+        if (data.monopoly_game_by_pk.roll_dice !== undefined) {
+          setIsRollDice(data.monopoly_game_by_pk.roll_dice);
+        }
+      }
     }
   }, [data]);
 
@@ -124,17 +163,67 @@ const Room = () => {
     return <div>Error</div>;
   }
 
+  const startGame = async () => {
+    try {
+      await makePostApiCall("api/monopoly/start-game", {
+        startingCash: gameSettings.startingCash,
+        gameId,
+        playerIds: playerSequence,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const rollDice = async () => {
+    try {
+      const res = await makePostApiCall("api/monopoly/roll-dice", {
+        gameId,
+      });
+      setDiceValues({
+        diceOne: res.data.diceValues[0],
+        diceTwo: res.data.diceValues[1],
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const endTurn = async () => {
+    try {
+      const res = await makePostApiCall("api/monopoly/end-turn", {
+        gameId,
+      });
+      console.log(res);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <ProtectRoute>
       <div className={styles.container}>
         <div>Left Section</div>
-        <MonopolyBoard />
+        <MonopolyBoard
+          startGame={startGame}
+          gameState={gameState}
+          rollDice={rollDice}
+          endTurn={endTurn}
+          gameSettings={{
+            userId: currentUserId,
+            cureentPlayerTurnId: currentPlayerTurnId,
+            rollDice: isRollDice,
+          }}
+          diceValues={diceValues}
+        />
         <div>
-          <GameSetting
-            gameId={gameId}
-            role={role}
-            gameSettings={gameSettings}
-          />
+          {gameState === "CREATED" && (
+            <GameSetting
+              gameId={gameId}
+              role={role}
+              gameSettings={gameSettings}
+            />
+          )}
         </div>
       </div>
     </ProtectRoute>

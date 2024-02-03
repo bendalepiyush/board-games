@@ -41,7 +41,6 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ error: "missing information in token." });
   }
 
-  const userId = userInfo.id;
   const { gameId, startingCash, playerIds } = req.body;
 
   if (!gameId || !startingCash || !playerIds) {
