@@ -9,3 +9,14 @@ export const rollDices = (diceCount = 1) => {
 
   return diceResult;
 };
+
+export const isCardHorizontal = (position: number): boolean => {
+  if (
+    (position >= 12 && position <= 20) ||
+    (position >= 32 && position <= 40)
+  ) {
+    return true;
+  }
+
+  return false;
+};

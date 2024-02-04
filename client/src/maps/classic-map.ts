@@ -5,30 +5,39 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Center",
     order: 13,
     gridSpan: "span 9",
+    position: 0,
   },
   {
     type: "Corner Card",
     imagePath: "/start.svg",
     title: "start",
     order: 1,
+    position: 1,
+    playersMap: {},
   },
   {
     type: "Corner Card",
     imagePath: "/jail.svg",
     title: "jail",
     order: 11,
+    position: 11,
+    playersMap: {},
   },
   {
     type: "Corner Card",
     imagePath: "/vacation.svg",
     title: "vacation",
     order: 41,
+    position: 21,
+    playersMap: {},
   },
   {
     type: "Corner Card",
     imagePath: "/skull.svg",
     title: "go to prison",
     order: 31,
+    position: 31,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -40,6 +49,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Country",
     title: "salvador",
     order: 2,
+    position: 2,
+    playersMap: {},
   },
   {
     type: "Surprise",
@@ -47,6 +58,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     cardPosition: "top",
     title: "treasure",
     order: 3,
+    position: 3,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -58,6 +71,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Country",
     title: "rio",
     order: 4,
+    position: 4,
+    playersMap: {},
   },
   {
     type: "Surprise",
@@ -65,6 +80,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     cardPosition: "top",
     title: "income tax",
     order: 5,
+    position: 5,
+    playersMap: {},
   },
   {
     backgroundImageUrl: "",
@@ -74,6 +91,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Company",
     title: "tlv airport",
     order: 6,
+    position: 6,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -85,6 +104,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Country",
     title: "tel aviv",
     order: 7,
+    position: 7,
+    playersMap: {},
   },
   {
     type: "Surprise",
@@ -92,6 +113,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     cardPosition: "top",
     title: "surprise",
     order: 8,
+    position: 8,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -103,6 +126,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Country",
     title: "haifa",
     order: 9,
+    position: 9,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -114,6 +139,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Country",
     title: "jerusalem",
     order: 10,
+    position: 10,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -125,6 +152,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Country",
     title: "venice",
     order: 14,
+    position: 12,
+    playersMap: {},
   },
   {
     backgroundImageUrl: "",
@@ -134,6 +163,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Company",
     title: "company electric",
     order: 16,
+    position: 13,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -145,6 +176,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Country",
     title: "milan",
     order: 18,
+    position: 14,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -156,6 +189,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Country",
     title: "rome",
     order: 20,
+    position: 15,
+    playersMap: {},
   },
   {
     backgroundImageUrl: "",
@@ -165,6 +200,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Company",
     title: "mc airport",
     order: 22,
+    position: 16,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -176,6 +213,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Country",
     title: "frankfurt",
     order: 24,
+    position: 17,
+    playersMap: {},
   },
   {
     type: "Surprise",
@@ -183,6 +222,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     cardPosition: "right",
     title: "treasure",
     order: 26,
+    position: 18,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -194,6 +235,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Country",
     title: "munich",
     order: 28,
+    position: 19,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -205,6 +248,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Country",
     title: "berlin",
     order: 30,
+    position: 20,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -216,6 +261,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Country",
     title: "shenzhen",
     order: 40,
+    position: 22,
+    playersMap: {},
   },
   {
     type: "Surprise",
@@ -223,6 +270,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     cardPosition: "bottom",
     title: "surprise",
     order: 39,
+    position: 23,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -234,6 +283,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Country",
     title: "beijing",
     order: 38,
+    position: 24,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -245,6 +296,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Country",
     title: "shanghai",
     order: 37,
+    position: 25,
+    playersMap: {},
   },
   {
     backgroundImageUrl: "",
@@ -254,6 +307,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Company",
     title: "co airport",
     order: 36,
+    position: 26,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -265,6 +320,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Country",
     title: "lyon",
     order: 35,
+    position: 27,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -276,6 +333,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Country",
     title: "toulouse",
     order: 34,
+    position: 28,
+    playersMap: {},
   },
   {
     backgroundImageUrl: "",
@@ -285,6 +344,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Company",
     title: "water company",
     order: 33,
+    position: 29,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -296,6 +357,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Country",
     title: "paris",
     order: 32,
+    position: 30,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -307,6 +370,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Country",
     title: "liverpool",
     order: 29,
+    position: 32,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -318,6 +383,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     type: "Country",
     title: "manchester",
     order: 27,
+    position: 33,
+    playersMap: {},
   },
   {
     type: "Surprise",
@@ -325,6 +392,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     title: "treasure",
     cardPosition: "left",
     order: 25,
+    position: 34,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -336,6 +405,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     cardPosition: "left",
     type: "Country",
     order: 23,
+    position: 35,
+    playersMap: {},
   },
   {
     backgroundImageUrl: "",
@@ -345,6 +416,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     cardPosition: "left",
     type: "Company",
     order: 21,
+    position: 36,
+    playersMap: {},
   },
   {
     type: "Surprise",
@@ -352,6 +425,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     title: "luxury tax",
     cardPosition: "left",
     order: 19,
+    position: 37,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -363,6 +438,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     cardPosition: "left",
     type: "Country",
     order: 17,
+    position: 38,
+    playersMap: {},
   },
   {
     type: "Surprise",
@@ -370,6 +447,8 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     title: "surprise",
     cardPosition: "left",
     order: 15,
+    position: 39,
+    playersMap: {},
   },
   {
     backgroundImageUrl:
@@ -381,5 +460,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     cardPosition: "left",
     type: "Country",
     order: 12,
+    position: 40,
+    playersMap: {},
   },
 ];

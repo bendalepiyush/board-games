@@ -34,6 +34,7 @@ const updatePlayerPositionMutation = gql`
     $currentPlayerId: uuid!
     $newPosition: Int!
     $rollDice: Boolean!
+    $diceValues: json!
   ) {
     update_monopoly_game_participant(
       where: {
@@ -54,7 +55,7 @@ const updatePlayerPositionMutation = gql`
         id: { _eq: $gameId }
         _and: { current_player_turn_id: { _eq: $currentPlayerId } }
       }
-      _set: { roll_dice: $rollDice }
+      _set: { roll_dice: $rollDice, dice_values: $diceValues }
     ) {
       returning {
         roll_dice
@@ -105,10 +106,11 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
         currentPlayerId: userId,
         newPosition,
         rollDice: diceValues[0] === diceValues[1] ? true : false,
+        diceValues: diceValues,
       },
     });
 
-    return res.status(200).json({ updatePositionRes, diceValues });
+    return res.status(200).json({ updatePositionRes });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }

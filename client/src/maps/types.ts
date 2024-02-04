@@ -9,6 +9,17 @@ export type Center = {
   type: CenterCardType;
   order: number;
   gridSpan: string;
+  position: number;
+};
+
+type Player = {
+  color: string;
+  name: string;
+  id: string;
+};
+
+export type PlayersMap = {
+  [key: number]: Player[];
 };
 
 export type CornerCard = {
@@ -16,6 +27,8 @@ export type CornerCard = {
   title: string;
   type: CornerCardType;
   order: number;
+  position: number;
+  playersMap: PlayersMap;
 };
 
 export type CountryCard = {
@@ -26,6 +39,8 @@ export type CountryCard = {
   cardPosition: CardPosition;
   type: CountryCardType;
   order: number;
+  position: number;
+  playersMap: PlayersMap;
 };
 
 export type CompanyCard = {
@@ -36,6 +51,8 @@ export type CompanyCard = {
   cardPosition: CardPosition;
   type: CompanyCardType;
   order: number;
+  position: number;
+  playersMap: PlayersMap;
 };
 
 export type SurpriseCard = {
@@ -44,6 +61,8 @@ export type SurpriseCard = {
   type: SurpriseCardType;
   cardPosition: CardPosition;
   order: number;
+  position: number;
+  playersMap: PlayersMap;
 };
 
 export type CLASSIC_MAP_CARD =

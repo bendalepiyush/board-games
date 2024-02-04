@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 import styles from "./style.module.scss";
 import { CountryCard } from "@/maps/types";
+import AvatarHolder from "../avatar-holder";
 
 const CardCountry: React.FC<CountryCard> = ({
   backgroundImageUrl,
@@ -10,6 +11,8 @@ const CardCountry: React.FC<CountryCard> = ({
   price,
   cardPosition,
   type,
+  position,
+  playersMap,
 }) => {
   const [width, setWidth] = useState<number>(0);
   const [fontSize, setFontSize] = useState<number>(1);
@@ -39,6 +42,11 @@ const CardCountry: React.FC<CountryCard> = ({
 
   return (
     <div className={styles.container} ref={ref}>
+      <AvatarHolder
+        players={playersMap[position] === undefined ? [] : playersMap[position]}
+        position={position}
+      />
+
       <div
         className={styles.bgImage}
         style={{

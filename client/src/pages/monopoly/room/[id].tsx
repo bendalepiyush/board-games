@@ -4,6 +4,7 @@ import { gql, useSubscription } from "@apollo/client";
 
 import styles from "./style.module.scss";
 import { makePostApiCall } from "@/js/api";
+import { PlayersMap } from "@/maps/types";
 
 import MonopolyBoard from "@/components/monopoly/board";
 import { ProtectRoute } from "@/components/protected-route";
@@ -27,6 +28,7 @@ const Room = () => {
     diceOne: 0,
     diceTwo: 0,
   });
+  const [playersMap, setPlayersMap] = useState<PlayersMap>({});
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -65,12 +67,18 @@ const Room = () => {
         id
         map
         roll_dice
+        dice_values
         monopoly_game_participants {
           current_position
           available_cash
           id
           is_bankrupt
           player_id
+          display_color
+          player {
+            status
+            username
+          }
         }
         player_sequence
         settings
@@ -103,7 +111,32 @@ const Room = () => {
   const { loading, error, data } = useSubscription(gameSubscription);
 
   useEffect(() => {
+    console.log(data);
     if (data && data.monopoly_game_by_pk) {
+      const playerMap: PlayersMap = {};
+
+      data.monopoly_game_by_pk.monopoly_game_participants.forEach(
+        (p: {
+          current_position: number;
+          id: string;
+          display_color: string;
+          player: { username: string };
+        }) => {
+          const playerObj = {
+            color: p.display_color,
+            name: p.player.username,
+            id: p.id,
+          };
+
+          if (playerMap[p.current_position]) {
+            playerMap[p.current_position].push(playerObj);
+          } else {
+            playerMap[p.current_position] = [playerObj];
+          }
+        }
+      );
+      setPlayersMap(playerMap);
+
       const {
         privateRoom,
         maxPlayers,
@@ -127,29 +160,28 @@ const Room = () => {
         randomPlayerOrder,
         startingCash,
       });
-    }
 
-    if (data) {
-      if (data.monopoly_game_by_pk) {
-        console.log(data.monopoly_game_by_pk);
+      if (data.monopoly_game_by_pk.game_state) {
+        setGameState(data.monopoly_game_by_pk.game_state);
+      }
 
-        if (data.monopoly_game_by_pk.game_state) {
-          setGameState(data.monopoly_game_by_pk.game_state);
-        }
+      if (data.monopoly_game_by_pk.player_sequence) {
+        setPlayerSequence(data.monopoly_game_by_pk.player_sequence);
+      }
 
-        if (data.monopoly_game_by_pk.player_sequence) {
-          setPlayerSequence(data.monopoly_game_by_pk.player_sequence);
-        }
+      if (data.monopoly_game_by_pk.current_player_turn_id) {
+        setCurrentPlayerTurnId(data.monopoly_game_by_pk.current_player_turn_id);
+      }
 
-        if (data.monopoly_game_by_pk.current_player_turn_id) {
-          setCurrentPlayerTurnId(
-            data.monopoly_game_by_pk.current_player_turn_id
-          );
-        }
+      if (data.monopoly_game_by_pk.roll_dice !== undefined) {
+        setIsRollDice(data.monopoly_game_by_pk.roll_dice);
+      }
 
-        if (data.monopoly_game_by_pk.roll_dice !== undefined) {
-          setIsRollDice(data.monopoly_game_by_pk.roll_dice);
-        }
+      if (data.monopoly_game_by_pk.dice_values) {
+        setDiceValues({
+          diceOne: data.monopoly_game_by_pk.dice_values[0],
+          diceTwo: data.monopoly_game_by_pk.dice_values[1],
+        });
       }
     }
   }, [data]);
@@ -177,12 +209,8 @@ const Room = () => {
 
   const rollDice = async () => {
     try {
-      const res = await makePostApiCall("api/monopoly/roll-dice", {
+      await makePostApiCall("api/monopoly/roll-dice", {
         gameId,
-      });
-      setDiceValues({
-        diceOne: res.data.diceValues[0],
-        diceTwo: res.data.diceValues[1],
       });
     } catch (err) {
       console.error(err);
@@ -191,10 +219,9 @@ const Room = () => {
 
   const endTurn = async () => {
     try {
-      const res = await makePostApiCall("api/monopoly/end-turn", {
+      await makePostApiCall("api/monopoly/end-turn", {
         gameId,
       });
-      console.log(res);
     } catch (err) {
       console.error(err);
     }
@@ -215,14 +242,18 @@ const Room = () => {
             rollDice: isRollDice,
           }}
           diceValues={diceValues}
+          playersMap={playersMap}
         />
         <div>
           {gameState === "CREATED" && (
-            <GameSetting
-              gameId={gameId}
-              role={role}
-              gameSettings={gameSettings}
-            />
+            <>
+              <h1>Players</h1>
+              <GameSetting
+                gameId={gameId}
+                role={role}
+                gameSettings={gameSettings}
+              />
+            </>
           )}
         </div>
       </div>

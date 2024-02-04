@@ -7,6 +7,7 @@ import CardCountry from "../card-country";
 import CardSurprise from "../card-surprise";
 import { CLASSIC_MAP } from "@/maps/classic-map";
 import CardCompany from "../card-company";
+import { PlayersMap } from "@/maps/types";
 
 type MonopolyBoardProps = {
   startGame: () => void;
@@ -22,6 +23,7 @@ type MonopolyBoardProps = {
     diceOne: number;
     diceTwo: number;
   };
+  playersMap: PlayersMap;
 };
 
 const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
@@ -31,6 +33,7 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
   gameSettings,
   endTurn,
   diceValues,
+  playersMap,
 }) => {
   return (
     <div className={styles.container}>
@@ -52,6 +55,8 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
                 cardPosition={item.cardPosition}
                 type={item.type}
                 order={item.order}
+                position={item.position}
+                playersMap={playersMap}
               />
             </div>
           );
@@ -74,6 +79,8 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
                 cardPosition={item.cardPosition}
                 type={item.type}
                 order={item.order}
+                position={item.position}
+                playersMap={playersMap}
               />
             </div>
           );
@@ -94,6 +101,8 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
                 cardPosition={item.cardPosition}
                 type={item.type}
                 order={item.order}
+                position={item.position}
+                playersMap={playersMap}
               />
             </div>
           );
@@ -131,6 +140,8 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
                 title={item.title}
                 type={item.type}
                 order={item.order}
+                position={item.position}
+                playersMap={playersMap}
               />
             </div>
           );
