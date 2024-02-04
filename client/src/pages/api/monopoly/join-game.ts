@@ -89,7 +89,7 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
       });
     }
 
-    return res.status(200).json({ role });
+    return res.status(200).json({ role, id: userId });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }

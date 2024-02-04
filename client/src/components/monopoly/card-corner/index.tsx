@@ -6,7 +6,12 @@ import { CornerCard } from "@/maps/types";
 
 import AvatarHolder from "../avatar-holder";
 
-const CornerCard: React.FC<CornerCard> = ({ imagePath, title }) => {
+const CornerCard: React.FC<CornerCard> = ({
+  imagePath,
+  title,
+  position,
+  playersMap,
+}) => {
   const [width, setWidth] = useState<number>(0);
   const [fontSize, setFontSize] = useState<number>(1);
   const ref = useRef<HTMLInputElement>(null);
@@ -35,12 +40,8 @@ const CornerCard: React.FC<CornerCard> = ({ imagePath, title }) => {
   return (
     <div className={styles.container} ref={ref}>
       <AvatarHolder
-        players={[
-          { color: "yellow", name: "roshan", id: "1" },
-          { color: "purple", name: "piyush", id: "2" },
-          { color: "red", name: "piyush", id: "3" },
-          { color: "purple", name: "piyush", id: "4" },
-        ]}
+        players={playersMap[position] === undefined ? [] : playersMap[position]}
+        position={position}
       />
 
       <p className={styles.desc} style={{ fontSize: `${fontSize}em` }}>

@@ -5,12 +5,14 @@ interface AvatarProps {
   containerLength?: number;
   topOffset?: number;
   color?: string;
+  isHorizontalCard?: boolean;
 }
 
 const Avatar: React.FC<AvatarProps> = ({
   containerLength = 30,
   topOffset = 0,
   color = "purple",
+  isHorizontalCard = false,
 }) => {
   const MAX_ZINDEX = 10;
 
@@ -19,17 +21,18 @@ const Avatar: React.FC<AvatarProps> = ({
   };
 
   const handleMouseLeave = () => {
-    setZindex("auto");
+    setZindex(1);
   };
 
-  const [zindex, setZindex] = useState<"auto" | number>("auto");
+  const [zindex, setZindex] = useState<1 | number>(1);
 
   return (
     <div
       style={{
         height: `${containerLength}px`,
         width: `${containerLength}px`,
-        top: `${topOffset}px`,
+        top: `${isHorizontalCard ? 0 : topOffset}px`,
+        left: `${isHorizontalCard ? topOffset : 0}px`,
         backgroundColor: color,
         zIndex: zindex,
       }}
