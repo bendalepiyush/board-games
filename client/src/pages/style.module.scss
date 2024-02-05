@@ -8,6 +8,7 @@
   background-size: cover;
   height: 100vh;
   position: relative;
+  background-attachment: fixed;
 
   &::after {
     content: "";
@@ -16,7 +17,14 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 1));
+    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 1));
+  }
+
+  .scroll {
+    z-index: 2;
+    width: 20px;
+    position: absolute;
+    bottom: 30px;
   }
 
   .content {
@@ -49,10 +57,9 @@
 
 .games {
   position: relative;
-  top: -10vh;
   max-width: 1200px;
   margin: auto;
-  padding-bottom: 50px;
+  padding-bottom: 200px;
 
   .monopolycard {
     color: #fff;
@@ -62,7 +69,7 @@
     justify-content: right;
 
     .container {
-      background-color: rgba(255, 51, 0, 0.1);
+      background-color: rgba(255, 255, 255, 0.05);
       box-shadow: 0px 0px 20px 0px rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
       position: absolute;

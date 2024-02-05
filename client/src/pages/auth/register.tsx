@@ -7,20 +7,10 @@ type SignUpParameters = {
 };
 
 const Register = () => {
-  const { user, register } = useAuth();
+  const { user } = useAuth();
   return (
     <div>
-      <button
-        onClick={() =>
-          register({
-            username: "piyush",
-            password: "Piyush@123",
-            email: "bendalepiyush73@gmail.com",
-          })
-        }
-      >
-        Button
-      </button>
+      <button>Button</button>
     </div>
   );
 };
