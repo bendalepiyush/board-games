@@ -9,6 +9,13 @@ import { PlayersMap } from "@/maps/types";
 import MonopolyBoard from "@/components/monopoly/board";
 import { ProtectRoute } from "@/components/protected-route";
 import GameSetting from "@/components/monopoly/game-setting";
+import PlayersInfo from "@/components/monopoly/player-info";
+
+type UserData = {
+  displayColor: string;
+  username: string;
+  isAdmin: boolean;
+};
 
 const Room = () => {
   const router = useRouter();
@@ -33,6 +40,7 @@ const Room = () => {
   const [hasJoinedGame, setHasJoinedGame] = useState<boolean>(true);
   const [userSelectedColors, setUserSelectedColors] = useState<string[]>([]);
   const [roomFull, setRoomFull] = useState<boolean>(false);
+  const [playerDetails, setPlayerDetails] = useState<UserData[]>([]);
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -42,10 +50,6 @@ const Room = () => {
     const getUserDetails = async () => {
       try {
         const res = await makePostApiCall("api/auth/get-current-user");
-
-        console.log(res);
-
-        // setRole(res.data.role);
         setCurrentUserId(res.data.id);
       } catch (error) {
         console.error("Error fetching game details:", error);
@@ -119,15 +123,18 @@ const Room = () => {
 
   useEffect(() => {
     console.log(data);
+
     if (data && data.monopoly_game_by_pk) {
       const playerMap: PlayersMap = {};
       const choosenColors: string[] = [];
+      const playersInfo: UserData[] = [];
 
       data.monopoly_game_by_pk.monopoly_game_participants.forEach(
         (p: {
           current_position: number;
           id: string;
           display_color: string;
+          player_id: string;
           player: { username: string };
         }) => {
           choosenColors.push(p.display_color);
@@ -142,11 +149,18 @@ const Room = () => {
           } else {
             playerMap[p.current_position] = [playerObj];
           }
+
+          playersInfo.push({
+            displayColor: p.display_color,
+            username: p.player.username,
+            isAdmin: p.player_id === data.monopoly_game_by_pk.admin,
+          });
         }
       );
 
       setPlayersMap(playerMap);
       setUserSelectedColors(choosenColors);
+      setPlayerDetails(playersInfo);
 
       const {
         privateRoom,
@@ -408,7 +422,7 @@ const Room = () => {
         <div>
           {gameState === "CREATED" && (
             <>
-              <h1>Players</h1>
+              <PlayersInfo data={playerDetails} />
               <GameSetting
                 gameId={gameId}
                 role={role}
