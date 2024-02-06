@@ -1,22 +1,23 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+import Header from "@/components/layout/header";
+import styles from "./style.module.scss";
 
 import axios from "axios";
-import { useState } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "@/context/auth";
 
 const Login = () => {
   const router = useRouter();
   const { user, login, logout } = useAuth();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
       router.replace("/monopoly");
     }
   }, [router]);
-
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
@@ -47,26 +48,29 @@ const Login = () => {
     }
   };
 
-  const logoutUser = () => {
-    logout();
-  };
-
   return (
     <div>
-      <input
-        type="text"
-        value={email}
-        placeholder="Email"
-        onChange={handleEmailChange}
-      />
-      <input
-        type="text"
-        value={password}
-        placeholder="Password"
-        onChange={handlePasswordChange}
-      />
-      <button onClick={logUserIn}>Login</button>
-      <button onClick={logoutUser}>Logout</button>
+      <div>
+        <div className={styles.header}>
+          <div className={styles.content}>
+            <div>
+              <input
+                type="text"
+                value={email}
+                placeholder="Email"
+                onChange={handleEmailChange}
+              />
+              <input
+                type="text"
+                value={password}
+                placeholder="Password"
+                onChange={handlePasswordChange}
+              />
+              <button onClick={logUserIn}>Login</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

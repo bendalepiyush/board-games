@@ -2,29 +2,31 @@ import Header from "@/components/layout/header";
 import styles from "./style.module.scss";
 import Lottie from "lottie-react";
 import scrollAnimationLotti from "@/components/lotti/scroll.json";
-import { motion, useAnimation } from "framer-motion";
-import { useEffect } from "react";
+import {
+  motion,
+  useAnimation,
+  useMotionValueEvent,
+  useScroll,
+} from "framer-motion";
+import { useEffect, useRef } from "react";
 
 const Home = () => {
+  const target = useRef(null);
   const controls = useAnimation();
+  const { scrollYProgress } = useScroll({
+    target,
+    offset: ["start end", "end start"],
+  });
 
-  const handleScroll = () => {
-    const scrollY = window.scrollY;
-    const shouldHide = scrollY > 1;
-    console.log(scrollY);
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    const shouldHide = latest > 0;
+    console.log(shouldHide);
 
     controls.start({ opacity: shouldHide ? 0 : 1 });
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  });
 
   return (
-    <div>
+    <motion.div ref={target}>
       <div>
         <div className={styles.header}>
           <Header />
@@ -62,7 +64,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
