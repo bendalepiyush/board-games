@@ -1,7 +1,12 @@
 import { NextApiRequest } from "next";
 
-export type jwtPayload = { id: string; username: string };
+type User = {
+  id: string;
+  username: string;
+};
+
+export type JwtPayload = User;
 
 export interface ExtendedNextApiRequest extends NextApiRequest {
-  user: { id: string; username: string };
+  user: User;
 }

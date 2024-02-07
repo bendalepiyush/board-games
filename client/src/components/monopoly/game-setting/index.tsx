@@ -1,7 +1,7 @@
 import styles from "./style.module.scss";
 import React, { useState } from "react";
 
-import { makePostApiCall } from "@/js/api";
+import { makeRequest } from "@/js/api";
 import Option from "@/components/monopoly/game-setting-option";
 
 type GameSettingProps = {
@@ -66,7 +66,7 @@ const GameSetting: React.FC<GameSettingProps> = ({
 
     try {
       setIsLoading(true);
-      await makePostApiCall("api/monopoly/update-game-settings", {
+      await makeRequest("api/monopoly/update-game-settings", {
         gameId,
         onlyLoggedInUserAllowed: true,
         startingCash: 5000,

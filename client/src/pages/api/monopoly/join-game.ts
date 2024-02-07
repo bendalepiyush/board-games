@@ -68,16 +68,9 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
       fetchPolicy: "network-only",
     });
 
-    console.log(data);
-
     if (data.monopoly_game_by_pk === null) {
       return res.status(400).json({ error: "Invalid gameId." });
     }
-
-    console.log(data.monopoly_game_by_pk.player_sequence, [
-      ...data.monopoly_game_by_pk.player_sequence,
-      userId,
-    ]);
 
     await apolloClient.mutate({
       mutation: addParticipantQuery,
