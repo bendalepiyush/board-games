@@ -9,6 +9,13 @@ import { PlayersMap } from "@/maps/types";
 import MonopolyBoard from "@/components/monopoly/board";
 import { ProtectRoute } from "@/components/protected-route";
 import GameSetting from "@/components/monopoly/game-setting";
+import PlayersInfo from "@/components/monopoly/player-info";
+
+type UserData = {
+  displayColor: string;
+  username: string;
+  isAdmin: boolean;
+};
 
 const Room = () => {
   const router = useRouter();
@@ -29,19 +36,20 @@ const Room = () => {
     diceTwo: 0,
   });
   const [playersMap, setPlayersMap] = useState<PlayersMap>({});
+  const [selectedPlayerColor, setSelectedPlayerColor] = useState<string>("");
+  const [hasJoinedGame, setHasJoinedGame] = useState<boolean>(true);
+  const [userSelectedColors, setUserSelectedColors] = useState<string[]>([]);
+  const [roomFull, setRoomFull] = useState<boolean>(false);
+  const [playerDetails, setPlayerDetails] = useState<UserData[]>([]);
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
       router.replace("/auth/login");
     }
 
-    const joinGame = async (gameId: string) => {
+    const getUserDetails = async () => {
       try {
-        const res = await makePostApiCall("api/monopoly/join-game", {
-          gameId,
-        });
-
-        setRole(res.data.role);
+        const res = await makePostApiCall("api/auth/get-current-user");
         setCurrentUserId(res.data.id);
       } catch (error) {
         console.error("Error fetching game details:", error);
@@ -51,10 +59,13 @@ const Room = () => {
       }
     };
 
+    getUserDetails();
+
     if (id) {
       const gameId = Array.isArray(id) ? id[0] : id;
       setGameId(gameId);
-      joinGame(gameId);
+      // getGameDetails();
+      // joinGame(gameId) ;
     }
   }, [id, router]);
 
@@ -112,16 +123,21 @@ const Room = () => {
 
   useEffect(() => {
     console.log(data);
+
     if (data && data.monopoly_game_by_pk) {
       const playerMap: PlayersMap = {};
+      const choosenColors: string[] = [];
+      const playersInfo: UserData[] = [];
 
       data.monopoly_game_by_pk.monopoly_game_participants.forEach(
         (p: {
           current_position: number;
           id: string;
           display_color: string;
+          player_id: string;
           player: { username: string };
         }) => {
+          choosenColors.push(p.display_color);
           const playerObj = {
             color: p.display_color,
             name: p.player.username,
@@ -133,9 +149,18 @@ const Room = () => {
           } else {
             playerMap[p.current_position] = [playerObj];
           }
+
+          playersInfo.push({
+            displayColor: p.display_color,
+            username: p.player.username,
+            isAdmin: p.player_id === data.monopoly_game_by_pk.admin,
+          });
         }
       );
+
       setPlayersMap(playerMap);
+      setUserSelectedColors(choosenColors);
+      setPlayerDetails(playersInfo);
 
       const {
         privateRoom,
@@ -183,8 +208,37 @@ const Room = () => {
           diceTwo: data.monopoly_game_by_pk.dice_values[1],
         });
       }
+
+      if (data.monopoly_game_by_pk.player_sequence) {
+        if (data.monopoly_game_by_pk.player_sequence.includes(currentUserId)) {
+          setHasJoinedGame(true);
+        } else {
+          setHasJoinedGame(false);
+        }
+
+        if (data.monopoly_game_by_pk.admin) {
+          if (data.monopoly_game_by_pk.admin === currentUserId) {
+            setRole("ADMIN");
+          } else if (
+            data.monopoly_game_by_pk.player_sequence.includes(currentUserId)
+          ) {
+            setRole("PARTICIPANT");
+          } else {
+            setRole("VIEWER");
+          }
+        }
+
+        if (
+          data.monopoly_game_by_pk.player_sequence.length ===
+          data.monopoly_game_by_pk.settings.maxPlayers
+        ) {
+          setRoomFull(true);
+        } else {
+          setRoomFull(false);
+        }
+      }
     }
-  }, [data]);
+  }, [data, currentUserId]);
 
   if (loading) {
     return <div>Loading..</div>;
@@ -227,9 +281,130 @@ const Room = () => {
     }
   };
 
+  const joinGame = async () => {
+    try {
+      const res = await makePostApiCall("api/monopoly/join-game", {
+        gameId,
+        displayColor: selectedPlayerColor,
+      });
+
+      setRole(res.data.role);
+    } catch (error) {
+      console.error("Error fetching game details:", error);
+      router.push(`/auth/login?redirect=${encodeURIComponent(router.asPath)}`);
+    }
+  };
+
+  const selectColor = (color: string) => {
+    if (userSelectedColors.includes(color)) {
+      console.log("Oops! Already selected");
+    } else {
+      setSelectedPlayerColor(color);
+    }
+  };
+
   return (
     <ProtectRoute>
       <div className={styles.container}>
+        {hasJoinedGame === false && roomFull === false && (
+          <div className={styles.joinGameContainer}>
+            <div style={{ height: "100px", textAlign: "center" }}>
+              <div
+                className={`${styles.colorContainer} 
+                ${
+                  selectedPlayerColor === "#bfda5b"
+                    ? styles.selectedColorContainer
+                    : ""
+                }
+                ${userSelectedColors.includes("#bfda5b") ? styles.disabled : ""}
+                `}
+                style={{ backgroundColor: "#bfda5b" }}
+                onClick={() => selectColor("#bfda5b")}
+              />
+              <div
+                className={`${styles.colorContainer} ${
+                  selectedPlayerColor === "#fbc845"
+                    ? styles.selectedColorContainer
+                    : ""
+                }
+                ${userSelectedColors.includes("#fbc845") ? styles.disabled : ""}
+                `}
+                style={{ backgroundColor: "#fbc845" }}
+                onClick={() => selectColor("#fbc845")}
+              />
+              <div
+                className={`${styles.colorContainer} ${
+                  selectedPlayerColor === "#fe8541"
+                    ? styles.selectedColorContainer
+                    : ""
+                }
+                ${userSelectedColors.includes("#fe8541") ? styles.disabled : ""}
+                `}
+                style={{ backgroundColor: "#fe8541" }}
+                onClick={() => selectColor("#fe8541")}
+              />
+              <div
+                className={`${styles.colorContainer} ${
+                  selectedPlayerColor === "#c34848"
+                    ? styles.selectedColorContainer
+                    : ""
+                }
+                ${userSelectedColors.includes("#c34848") ? styles.disabled : ""}
+                `}
+                style={{ backgroundColor: "#c34848" }}
+                onClick={() => selectColor("#c34848")}
+              />
+              <div
+                className={`${styles.colorContainer} ${
+                  selectedPlayerColor === "#5b9cdc"
+                    ? styles.selectedColorContainer
+                    : ""
+                }
+                ${userSelectedColors.includes("#5b9cdc") ? styles.disabled : ""}
+                `}
+                style={{ backgroundColor: "#5b9cdc" }}
+                onClick={() => selectColor("#5b9cdc")}
+              />
+              <div
+                className={`${styles.colorContainer} ${
+                  selectedPlayerColor === "#7fe7f5"
+                    ? styles.selectedColorContainer
+                    : ""
+                }
+                ${userSelectedColors.includes("#7fe7f5") ? styles.disabled : ""}
+                `}
+                style={{ backgroundColor: "#7fe7f5" }}
+                onClick={() => selectColor("#7fe7f5")}
+              />
+              <div
+                className={`${styles.colorContainer} ${
+                  selectedPlayerColor === "#069a8d"
+                    ? styles.selectedColorContainer
+                    : ""
+                }
+                ${userSelectedColors.includes("#069a8d") ? styles.disabled : ""}
+                `}
+                style={{ backgroundColor: "#069a8d" }}
+                onClick={() => selectColor("#069a8d")}
+              />
+              <div
+                className={`${styles.colorContainer} ${
+                  selectedPlayerColor === "#73e85d"
+                    ? styles.selectedColorContainer
+                    : ""
+                }
+                ${userSelectedColors.includes("#73e85d") ? styles.disabled : ""}
+                `}
+                style={{ backgroundColor: "#73e85d" }}
+                onClick={() => selectColor("#73e85d")}
+              />
+            </div>
+            <div style={{ textAlign: "center" }}>
+              <button onClick={joinGame}>Join Game</button>
+            </div>
+          </div>
+        )}
+
         <div>Left Section</div>
         <MonopolyBoard
           startGame={startGame}
@@ -247,7 +422,7 @@ const Room = () => {
         <div>
           {gameState === "CREATED" && (
             <>
-              <h1>Players</h1>
+              <PlayersInfo data={playerDetails} />
               <GameSetting
                 gameId={gameId}
                 role={role}

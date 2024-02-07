@@ -28,16 +28,6 @@ const createGameQuery = gql`
   }
 `;
 
-const addParticipant = gql`
-  mutation addParticipant($gameId: uuid!, $playerId: uuid!) {
-    insert_monopoly_game_participant_one(
-      object: { game_id: $gameId, player_id: $playerId }
-    ) {
-      id
-    }
-  }
-`;
-
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
     return res
@@ -61,7 +51,7 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
         currentPlayerTurnId: userId,
         gameState: "CREATED",
         map: "classic_map",
-        playerSequence: [userId],
+        playerSequence: [],
         settings: {
           maxPlayers: 4,
           privateRoom: true,
@@ -79,14 +69,6 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
     });
 
     const gameId = createGameResult.data.insert_monopoly_game_one.id;
-
-    await apolloClient.mutate({
-      mutation: addParticipant,
-      variables: {
-        gameId,
-        playerId: userId,
-      },
-    });
 
     return res.json({ gameId });
   } catch (error: any) {

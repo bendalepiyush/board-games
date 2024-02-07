@@ -20,9 +20,14 @@ const addParticipantQuery = gql`
     $gameId: uuid!
     $playerId: uuid!
     $playerSequence: [uuid!]!
+    $displayColor: String!
   ) {
     insert_monopoly_game_participant_one(
-      object: { game_id: $gameId, player_id: $playerId }
+      object: {
+        game_id: $gameId
+        player_id: $playerId
+        display_color: $displayColor
+      }
     ) {
       id
     }
@@ -50,46 +55,43 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   }
 
   const userId = userInfo.id;
-  const { gameId } = req.body;
+  const { gameId, displayColor } = req.body;
 
-  if (!gameId) {
-    return res.status(400).json({ error: "missing gameId." });
+  if (!gameId || !displayColor) {
+    return res.status(400).json({ error: "missing gameId / displayColor" });
   }
 
   try {
     const { data } = await apolloClient.query({
       query: getGameDetailsQuery,
       variables: { gameId },
+      fetchPolicy: "network-only",
     });
+
+    console.log(data);
 
     if (data.monopoly_game_by_pk === null) {
       return res.status(400).json({ error: "Invalid gameId." });
     }
 
-    let role = "VIEWER";
+    console.log(data.monopoly_game_by_pk.player_sequence, [
+      ...data.monopoly_game_by_pk.player_sequence,
+      userId,
+    ]);
 
-    if (data.monopoly_game_by_pk.admin === userId) {
-      role = "ADMIN";
-    } else if (data.monopoly_game_by_pk.player_sequence.includes(userId)) {
-      role = "PARTICIPANT";
-    }
+    await apolloClient.mutate({
+      mutation: addParticipantQuery,
+      variables: {
+        gameId,
+        playerId: userId,
+        playerSequence: [...data.monopoly_game_by_pk.player_sequence, userId],
+        displayColor,
+      },
+    });
 
-    if (
-      !data.monopoly_game_by_pk.player_sequence.includes(userId) &&
-      data.monopoly_game_by_pk.player_sequence.length <
-        data.monopoly_game_by_pk.settings.maxPlayers
-    ) {
-      await apolloClient.mutate({
-        mutation: addParticipantQuery,
-        variables: {
-          gameId,
-          playerId: userId,
-          playerSequence: [...data.monopoly_game_by_pk.player_sequence, userId],
-        },
-      });
-    }
-
-    return res.status(200).json({ role, id: userId });
+    return res.status(200).json({
+      data,
+    });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }
