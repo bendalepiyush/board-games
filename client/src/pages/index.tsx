@@ -9,6 +9,7 @@ import {
   useScroll,
 } from "framer-motion";
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 
 const Home = () => {
   const target = useRef(null);
@@ -55,9 +56,11 @@ const Home = () => {
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                   Suspendisse dictum at massa nec venenatis.
                 </p>
-                <button className={styles.button} role="button">
-                  Play Now
-                </button>
+                <Link href={"/monopoly"}>
+                  <button className={styles.button} role="button">
+                    Play Now
+                  </button>
+                </Link>
               </div>
             </div>
             <img src="/monopoly.png" />

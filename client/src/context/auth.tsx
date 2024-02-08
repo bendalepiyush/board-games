@@ -6,6 +6,7 @@ import React, {
   useEffect,
 } from "react";
 import { getSocketClient } from "@/js/socket-client";
+import axios from "axios";
 
 type User = {
   token: string | null;
@@ -48,12 +49,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, []);
 
-  const login = (token: string, username: string) => {
-    setUser({ token, username });
-    localStorage.setItem("token", token);
-    localStorage.setItem("username", username);
+  const login = async (email: string, password: string) => {
+    try {
+      const response = await axios.post("/api/auth/login", {
+        email: email,
+        password: password,
+      });
 
-    getSocketClient(token);
+      const { token, username } = response.data;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("username", username);
+      setUser({ token, username });
+      getSocketClient(token);
+    } catch (error: any) {
+      console.error("Error logging in:", error.message);
+    }
   };
 
   const logout = () => {
