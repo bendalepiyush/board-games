@@ -18,6 +18,7 @@ type MonopolyBoardProps = {
     userId: string;
     cureentPlayerTurnId: string;
     rollDice: boolean;
+    isAdmin: boolean;
   };
   diceValues: {
     diceOne: number;
@@ -159,7 +160,7 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
               }}
             >
               Center
-              {gameState === "CREATED" && (
+              {gameState === "CREATED" && gameSettings.isAdmin && (
                 <button onClick={startGame}>Start Game</button>
               )}
               {gameState === "STARTED" &&
