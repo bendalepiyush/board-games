@@ -16,6 +16,7 @@ const CardCountry: React.FC<CountryCard> = ({
 }) => {
   const [width, setWidth] = useState<number>(0);
   const [fontSize, setFontSize] = useState<number>(1);
+  const [headerContainer, setHeaderContainer] = useState<any>();
   const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -26,15 +27,37 @@ const CardCountry: React.FC<CountryCard> = ({
       const height = ref.current?.offsetHeight || 50;
 
       const designedFor = 70;
+      const smaller = width > height ? height : width;
 
-      if (width > height) {
-        setWidth(height);
-        setFontSize(height / designedFor);
-      } else {
-        setWidth(width);
-        setFontSize(width / designedFor);
+      setWidth(smaller);
+      setFontSize(smaller / designedFor);
+
+      const marginOffset = `-${(smaller * 0.45) / 2}px`;
+
+      switch (cardPosition) {
+        case "top":
+          setHeaderContainer({
+            bottom: marginOffset,
+          });
+          break;
+        case "bottom":
+          setHeaderContainer({
+            top: marginOffset,
+          });
+          break;
+        case "left":
+          setHeaderContainer({
+            right: marginOffset,
+          });
+          break;
+        case "right":
+          setHeaderContainer({
+            left: marginOffset,
+          });
+          break;
       }
     });
+
     resizeObserver.observe(ref.current);
 
     return () => resizeObserver.disconnect();
@@ -71,15 +94,7 @@ const CardCountry: React.FC<CountryCard> = ({
             {price}
           </div>
         </div>
-        <div
-          className={styles.headerContainer}
-          style={{
-            top: cardPosition === "bottom" ? `-${(width * 0.45) / 2}px` : 0,
-            bottom: cardPosition === "top" ? `-${(width * 0.45) / 2}px` : 0,
-            left: cardPosition === "right" ? `-${(width * 0.45) / 2}px` : 0,
-            right: cardPosition === "left" ? `-${(width * 0.45) / 2}px` : 0,
-          }}
-        >
+        <div className={styles.headerContainer} style={headerContainer}>
           <p
             className={styles.title}
             style={{

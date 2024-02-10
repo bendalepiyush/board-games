@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSubscription } from "@apollo/client";
 
 import styles from "./style.module.scss";
@@ -57,6 +57,7 @@ const Room = () => {
     randomPlayerOrder: true,
     startingCash: 0,
   });
+  const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -163,6 +164,9 @@ const Room = () => {
     setRoomFull(roomFull);
   }, [data, currentUserId]);
 
+  // Responsive Mangement
+  useEffect(() => {}, []);
+
   if (loading) {
     return <div>Loading..</div>;
   }
@@ -228,7 +232,7 @@ const Room = () => {
 
   return (
     <ProtectRoute>
-      <div className={styles.container}>
+      <div className={styles.container} ref={ref}>
         <JoinGameContainer
           hasJoinedGame={hasJoinedGame}
           roomFull={roomFull}
