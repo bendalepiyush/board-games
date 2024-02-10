@@ -11,42 +11,22 @@ import GameSetting from "@/components/monopoly/game-setting";
 import PlayersInfo from "@/components/monopoly/player-info";
 import { Role, User } from "@/types/user";
 import { GAME_SUBSCRIPTION } from "@/queries/gameSubscription";
-import { GameData } from "@/types/monopolyGame";
+import { GameData, Game } from "@/types/monopolyGame";
 import JoinGameContainer from "@/components/monopoly/join-game-container";
 
-const Room = () => {
-  const router = useRouter();
-  const { id } = router.query;
-
-  const [role, setRole] = useState<Role>("VIEWER");
-  const [gameId, setGameId] = useState<string>("");
-  const [gameState, setGameState] = useState<string>("");
-  const [startingCash, setStartingCash] = useState<number>(0);
-  const [playerSequence, setPlayerSequence] = useState<string[]>([]);
-  const [currentUserId, setCurrentUserId] = useState<string>("");
-  const [currentPlayerTurnId, setCurrentPlayerTurnId] = useState<string>("");
-  const [isRollDice, setIsRollDice] = useState<boolean>(true);
-  const [diceValues, setDiceValues] = useState({
-    diceOne: 0,
-    diceTwo: 0,
-  });
-  const [playersMap, setPlayersMap] = useState<PlayersMap>({});
-  const [selectedPlayerColor, setSelectedPlayerColor] = useState<string>("");
-  const [hasJoinedGame, setHasJoinedGame] = useState<boolean>(true);
-  const [userSelectedColors, setUserSelectedColors] = useState<string[]>([]);
-  const [roomFull, setRoomFull] = useState<boolean>(false);
-  const [playerDetails, setPlayerDetails] = useState<User[]>([]);
-  const [gameSettings, setGameSettings] = useState<{
-    privateRoom: boolean;
-    maxPlayers: number;
-    x2RentOnFullSet: boolean;
-    vacationCashAllowed: boolean;
-    auction: boolean;
-    noRentCollectionInPrison: boolean;
-    evenBuild: boolean;
-    randomPlayerOrder: boolean;
-    startingCash: number;
-  }>({
+const DEFAULT_GAME_INFO: Game = {
+  user: {
+    hasJoinedGame: false,
+    isAdmin: false,
+    role: "VIEWER",
+  },
+  players: {
+    location: [],
+    choosenColors: [],
+    info: [],
+    playerSequence: [],
+  },
+  settings: {
     privateRoom: true,
     maxPlayers: 4,
     x2RentOnFullSet: true,
@@ -56,8 +36,27 @@ const Room = () => {
     evenBuild: true,
     randomPlayerOrder: true,
     startingCash: 0,
-  });
-  const ref = useRef<HTMLInputElement>(null);
+  },
+  state: "CREATED",
+  currentPlayerTurn: "",
+  dice: {
+    state: {
+      diceOne: 0,
+      diceTwo: 0,
+    },
+    isRollDice: false,
+  },
+  isRoomFull: false,
+};
+
+const Room = () => {
+  const router = useRouter();
+  const { id } = router.query;
+
+  const [game, setGame] = useState<Game>(DEFAULT_GAME_INFO);
+  const [gameId, setGameId] = useState<string>("");
+  const [currentUserId, setCurrentUserId] = useState<string>("");
+  const [selectedPlayerColor, setSelectedPlayerColor] = useState<string>("");
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -95,7 +94,7 @@ const Room = () => {
 
     const gameData: GameData = data.monopoly_game_by_pk;
 
-    console.log("gameData", gameData);
+    // console.log("gameData", gameData);
 
     const {
       monopoly_game_participants,
@@ -134,22 +133,11 @@ const Room = () => {
       });
     });
 
-    setPlayersMap(playerMap);
-    setUserSelectedColors(choosenColors);
-    setPlayerDetails(playersInfo);
-    setGameSettings(settings);
-    setGameState(game_state);
-    setPlayerSequence(player_sequence);
-    setCurrentPlayerTurnId(current_player_turn_id);
-    setIsRollDice(roll_dice !== undefined ? roll_dice : false);
-
-    if (dice_values) {
-      const [diceOne, diceTwo] = dice_values;
-      setDiceValues({ diceOne, diceTwo });
-    }
+    const isRollDice = roll_dice !== undefined ? roll_dice : false;
+    const [diceOne, diceTwo] = dice_values;
+    const isRoomFull = player_sequence.length === settings.maxPlayers;
 
     const hasJoinedGame = player_sequence.includes(currentUserId);
-    setHasJoinedGame(hasJoinedGame);
 
     let role: Role = "VIEWER";
     if (admin === currentUserId) {
@@ -158,10 +146,36 @@ const Room = () => {
       role = "PARTICIPANT";
     }
 
-    setRole(role);
+    let isAdmin = false;
+    if (admin === currentUserId) {
+      isAdmin = true;
+    }
 
-    const roomFull = player_sequence.length === settings.maxPlayers;
-    setRoomFull(roomFull);
+    const gameInfo: Game = {
+      user: {
+        hasJoinedGame,
+        isAdmin,
+        role,
+      },
+      settings,
+      players: {
+        location: playerMap,
+        choosenColors: choosenColors,
+        info: playersInfo,
+        playerSequence: player_sequence,
+      },
+      state: game_state,
+      currentPlayerTurn: current_player_turn_id,
+      dice: {
+        state: { diceOne, diceTwo },
+        isRollDice,
+      },
+      isRoomFull,
+    };
+
+    // console.log("gameInfo", gameInfo);
+
+    setGame(gameInfo);
   }, [data, currentUserId]);
 
   // Responsive Mangement
@@ -179,9 +193,9 @@ const Room = () => {
   const startGame = async () => {
     try {
       await makeRequest("api/monopoly/start-game", {
-        startingCash: gameSettings.startingCash,
+        startingCash: game.settings.startingCash,
         gameId,
-        playerIds: playerSequence,
+        playerIds: game.players.playerSequence,
       });
     } catch (err) {
       console.error(err);
@@ -210,12 +224,10 @@ const Room = () => {
 
   const joinGame = async () => {
     try {
-      const res = await makeRequest("api/monopoly/join-game", {
+      await makeRequest("api/monopoly/join-game", {
         gameId,
         displayColor: selectedPlayerColor,
       });
-
-      setRole(res.data.role);
     } catch (error) {
       console.error(error);
       router.push(`/auth/login?redirect=${encodeURIComponent(router.asPath)}`);
@@ -223,7 +235,7 @@ const Room = () => {
   };
 
   const selectColor = (color: string) => {
-    if (userSelectedColors.includes(color)) {
+    if (game.players.choosenColors.includes(color)) {
       console.log("Already selected");
     } else {
       setSelectedPlayerColor(color);
@@ -232,38 +244,39 @@ const Room = () => {
 
   return (
     <ProtectRoute>
-      <div className={styles.container} ref={ref}>
+      <div className={styles.container}>
         <JoinGameContainer
-          hasJoinedGame={hasJoinedGame}
-          roomFull={roomFull}
+          hasJoinedGame={game.user.hasJoinedGame}
+          roomFull={game.isRoomFull}
           selectedPlayerColor={selectedPlayerColor}
-          userSelectedColors={userSelectedColors}
+          userSelectedColors={game.players.choosenColors}
           selectColor={selectColor}
           joinGame={joinGame}
         />
 
         <div>Left Section</div>
         <MonopolyBoard
-          startGame={startGame}
-          gameState={gameState}
-          rollDice={rollDice}
           endTurn={endTurn}
+          rollDice={rollDice}
+          startGame={startGame}
+          gameState={game.state}
           gameSettings={{
             userId: currentUserId,
-            cureentPlayerTurnId: currentPlayerTurnId,
-            rollDice: isRollDice,
+            cureentPlayerTurnId: game.currentPlayerTurn,
+            rollDice: game.dice.isRollDice,
+            isAdmin: game.user.isAdmin,
           }}
-          diceValues={diceValues}
-          playersMap={playersMap}
+          diceValues={game.dice.state}
+          playersMap={game.players.location}
         />
         <div>
-          {gameState === "CREATED" && (
+          <PlayersInfo data={game.players.info} />
+          {game.state === "CREATED" && (
             <>
-              <PlayersInfo data={playerDetails} />
               <GameSetting
                 gameId={gameId}
-                role={role}
-                gameSettings={gameSettings}
+                role={game.user.role}
+                gameSettings={game.settings}
               />
             </>
           )}

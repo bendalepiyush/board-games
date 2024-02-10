@@ -1,6 +1,7 @@
-import { Status } from "./user";
+import { PlayersMap } from "@/maps/types";
+import { Role, Status, User } from "./user";
 
-type GameState = "CREATED" | "STARTED" | "ENDED";
+export type GameState = "CREATED" | "STARTED" | "ENDED";
 
 type Map = "classic_map";
 
@@ -42,4 +43,39 @@ export type GameData = {
   player_sequence: string[];
   roll_dice: boolean;
   settings: GameSettings;
+};
+
+export type Game = {
+  user: {
+    hasJoinedGame: boolean;
+    role: Role;
+    isAdmin: boolean;
+  };
+  settings: {
+    privateRoom: boolean;
+    maxPlayers: number;
+    x2RentOnFullSet: boolean;
+    vacationCashAllowed: boolean;
+    auction: boolean;
+    noRentCollectionInPrison: boolean;
+    evenBuild: boolean;
+    randomPlayerOrder: boolean;
+    startingCash: number;
+  };
+  players: {
+    location: PlayersMap;
+    choosenColors: string[];
+    info: User[];
+    playerSequence: string[];
+  };
+  state: GameState;
+  currentPlayerTurn: string;
+  isRoomFull: boolean;
+  dice: {
+    state: {
+      diceOne: number;
+      diceTwo: number;
+    };
+    isRollDice: boolean;
+  };
 };
