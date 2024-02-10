@@ -32,6 +32,12 @@ type GameSettings = {
   x2RentOnFullSet: boolean;
 };
 
+export type Property = {
+  location: number;
+  properties_owned: number;
+  player_id: string;
+};
+
 export type GameData = {
   admin: string;
   current_player_turn_id: string;
@@ -43,6 +49,7 @@ export type GameData = {
   player_sequence: string[];
   roll_dice: boolean;
   settings: GameSettings;
+  monopoly_participant_properties: Property[];
 };
 
 export type Game = {
@@ -67,6 +74,7 @@ export type Game = {
     choosenColors: string[];
     info: User[];
     playerSequence: string[];
+    properties: Property[];
   };
   state: GameState;
   currentPlayerTurn: string;

@@ -25,6 +25,7 @@ const DEFAULT_GAME_INFO: Game = {
     choosenColors: [],
     info: [],
     playerSequence: [],
+    properties: [],
   },
   settings: {
     privateRoom: true,
@@ -94,7 +95,7 @@ const Room = () => {
 
     const gameData: GameData = data.monopoly_game_by_pk;
 
-    // console.log("gameData", gameData);
+    console.log("gameData", gameData);
 
     const {
       monopoly_game_participants,
@@ -105,6 +106,7 @@ const Room = () => {
       roll_dice,
       dice_values,
       admin,
+      monopoly_participant_properties,
     } = gameData;
 
     const playerMap: PlayersMap = {};
@@ -121,6 +123,7 @@ const Room = () => {
         color: display_color,
         name: player.username,
         id,
+        playerId: player_id,
       };
 
       playerMap[current_position] = playerMap[current_position] || [];
@@ -163,6 +166,7 @@ const Room = () => {
         choosenColors: choosenColors,
         info: playersInfo,
         playerSequence: player_sequence,
+        properties: monopoly_participant_properties,
       },
       state: game_state,
       currentPlayerTurn: current_player_turn_id,
@@ -204,9 +208,11 @@ const Room = () => {
 
   const rollDice = async () => {
     try {
-      await makeRequest("api/monopoly/roll-dice", {
+      const res = await makeRequest("api/monopoly/roll-dice", {
         gameId,
       });
+
+      console.log(res.data);
     } catch (err) {
       console.error(err);
     }
@@ -268,6 +274,9 @@ const Room = () => {
           }}
           diceValues={game.dice.state}
           playersMap={game.players.location}
+          properties={game.players.properties}
+          currentUserId={currentUserId}
+          gameId={gameId}
         />
         <div>
           <PlayersInfo data={game.players.info} />
