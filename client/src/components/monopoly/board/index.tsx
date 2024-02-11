@@ -7,8 +7,7 @@ import CardCountry from "../card-country";
 import CardSurprise from "../card-surprise";
 import { CLASSIC_MAP } from "@/maps/classic-map";
 import CardCompany from "../card-company";
-import { PlayersMap } from "@/maps/types";
-import { Property } from "@/types/monopolyGame";
+import { Game } from "@/types/monopolyGame";
 import { makeRequest } from "@/js/api";
 import {
   MONOPOLY_CLASSIC_PROPERTY_MAP,
@@ -17,21 +16,9 @@ import {
 
 type MonopolyBoardProps = {
   startGame: () => void;
-  gameState: string;
   rollDice: () => void;
   endTurn: () => void;
-  gameSettings: {
-    userId: string;
-    cureentPlayerTurnId: string;
-    rollDice: boolean;
-    isAdmin: boolean;
-  };
-  diceValues: {
-    diceOne: number;
-    diceTwo: number;
-  };
-  playersMap: PlayersMap;
-  properties: Property[];
+  game: Game;
   currentUserId: string;
   gameId: string;
   blurOut: boolean;
@@ -39,13 +26,9 @@ type MonopolyBoardProps = {
 
 const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
   startGame,
-  gameState,
   rollDice,
-  gameSettings,
   endTurn,
-  diceValues,
-  playersMap,
-  properties,
+  game,
   currentUserId,
   gameId,
   blurOut,
@@ -58,16 +41,19 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
     const tradedLocations: number[] = [];
     const locationsOwnedByOthers: number[] = [];
 
-    properties.forEach((prop: { player_id: string; location: number }) => {
-      tradedLocations.push(prop.location);
+    game.players.properties.forEach(
+      (prop: { player_id: string; location: number }) => {
+        tradedLocations.push(prop.location);
 
-      if (prop.player_id !== currentUserId) {
-        locationsOwnedByOthers.push(prop.location);
+        if (prop.player_id !== currentUserId) {
+          locationsOwnedByOthers.push(prop.location);
+        }
       }
-    });
+    );
 
     let currentLocation = 0;
 
+    const playersMap = game.players.location;
     Object.keys(playersMap).forEach((k) => {
       const index = parseInt(k);
 
@@ -89,15 +75,24 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
     }
 
     setIsEligibleForTrade(canTrade);
-  }, [properties, currentUserId, playersMap, currLocation]);
+  }, [game.players.properties, currentUserId, game.players.location]);
 
   const buyProp = async () => {
     try {
-      await makeRequest("api/monopoly/buy-prop", {
-        gameId,
-        location: currLocation,
-        propertiesOwned: 0,
-      });
+      const currPlayer = game.players.info.find(
+        (p) => p.userId === currentUserId
+      );
+
+      if (currPlayer) {
+        const availableCash = currPlayer.availableCash - price;
+
+        await makeRequest("api/monopoly/buy-prop", {
+          gameId,
+          location: currLocation,
+          propertiesOwned: 0,
+          availableCash,
+        });
+      }
     } catch (err) {
       console.error(err);
     }
@@ -129,7 +124,7 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
                 type={item.type}
                 order={item.order}
                 position={item.position}
-                playersMap={playersMap}
+                playersMap={game.players.location}
               />
             </div>
           );
@@ -153,7 +148,7 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
                 type={item.type}
                 order={item.order}
                 position={item.position}
-                playersMap={playersMap}
+                playersMap={game.players.location}
               />
             </div>
           );
@@ -175,7 +170,7 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
                 type={item.type}
                 order={item.order}
                 position={item.position}
-                playersMap={playersMap}
+                playersMap={game.players.location}
               />
             </div>
           );
@@ -214,7 +209,7 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
                 type={item.type}
                 order={item.order}
                 position={item.position}
-                playersMap={playersMap}
+                playersMap={game.players.location}
               />
             </div>
           );
@@ -232,18 +227,18 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
               }}
             >
               <span style={{ color: "white", margin: "40px" }}>
-                <span>{diceValues.diceOne}</span>
+                <span>{game.dice.state.diceOne}</span>
                 <span> - </span>
-                <span>{diceValues.diceTwo}</span>
+                <span>{game.dice.state.diceTwo}</span>
               </span>
 
-              {gameState === "CREATED" && gameSettings.isAdmin && (
+              {game.state === "CREATED" && game.user.isAdmin && (
                 <button onClick={startGame}>Start Game</button>
               )}
 
-              {gameState === "STARTED" &&
-                gameSettings.userId === gameSettings.cureentPlayerTurnId &&
-                (gameSettings.rollDice ? (
+              {game.state === "STARTED" &&
+                currentUserId === game.currentPlayerTurn &&
+                (game.dice.isRollDice ? (
                   <button onClick={rollDice}>Roll the dice</button>
                 ) : (
                   <>

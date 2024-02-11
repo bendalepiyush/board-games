@@ -11,16 +11,17 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
       .json({ error: "Method Not Allowed. Expecting POST." });
   }
 
-  const userInfo = req.user;
+  const { userId } = req.user;
 
-  if (!userInfo) {
-    return res.status(400).json({ error: "missing information in token." });
-  }
+  const { gameId, location, propertiesOwned, propertyPrice, availableCash } =
+    req.body;
 
-  const userId = userInfo.id;
-  const { gameId, location, propertiesOwned } = req.body;
-
-  if (!gameId || location === undefined || propertiesOwned === undefined) {
+  if (
+    !gameId ||
+    location === undefined ||
+    propertiesOwned === undefined ||
+    availableCash === undefined
+  ) {
     return res
       .status(400)
       .json({ error: "missing gameId / location / propertiesOwned." });
@@ -34,6 +35,7 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
         location,
         playerId: userId,
         propertiesOwned,
+        availableCash,
       },
     });
 

@@ -41,7 +41,7 @@ const Room = () => {
     const getUserDetails = async () => {
       try {
         const res = await makeRequest("api/auth/get-current-user");
-        setCurrentUserId(res.data.id);
+        setCurrentUserId(res.data.userId);
       } catch (error) {
         console.error(error);
         // router.push(
@@ -64,7 +64,7 @@ const Room = () => {
 
     const gameData: GameData = data.monopoly_game_by_pk;
 
-    // console.log("gameData", gameData);
+    console.log("gameData", gameData);
 
     const {
       monopoly_game_participants,
@@ -81,9 +81,20 @@ const Room = () => {
     const playerMap: PlayersMap = {};
     const choosenColors: string[] = [];
     const playersInfo: User[] = [];
+    const playersInfoTempMap: {
+      [key: string]: User;
+    } = {};
 
     monopoly_game_participants.forEach((p) => {
-      const { current_position, id, display_color, player, player_id } = p;
+      const {
+        current_position,
+        id,
+        display_color,
+        player,
+        player_id,
+        available_cash,
+      } = p;
+
       const isAdmin = player_id === admin;
 
       choosenColors.push(display_color);
@@ -98,11 +109,18 @@ const Room = () => {
       playerMap[current_position] = playerMap[current_position] || [];
       playerMap[current_position].push(playerObj);
 
-      playersInfo.push({
+      playersInfoTempMap[player_id] = {
         displayColor: display_color,
         username: player.username,
         isAdmin,
-      });
+        availableCash: available_cash,
+        status: player.status,
+        userId: player_id,
+      };
+    });
+
+    player_sequence.forEach((playerId) => {
+      playersInfo.push(playersInfoTempMap[playerId]);
     });
 
     const isRollDice = roll_dice !== undefined ? roll_dice : false;
@@ -146,7 +164,7 @@ const Room = () => {
       isRoomFull,
     };
 
-    // console.log("gameInfo", gameInfo);
+    console.log("gameInfo", gameInfo);
 
     setGame(gameInfo);
   }, [data, currentUserId]);
@@ -256,23 +274,14 @@ const Room = () => {
               endTurn={endTurn}
               rollDice={rollDice}
               startGame={startGame}
-              gameState={game.state}
-              gameSettings={{
-                userId: currentUserId,
-                cureentPlayerTurnId: game.currentPlayerTurn,
-                rollDice: game.dice.isRollDice,
-                isAdmin: game.user.isAdmin,
-              }}
-              diceValues={game.dice.state}
-              playersMap={game.players.location}
-              properties={game.players.properties}
+              game={game}
               currentUserId={currentUserId}
               gameId={gameId}
               blurOut={!game.user.hasJoinedGame}
             />
           </div>
           <div className={styles.rightSection}>
-            <PlayersInfo data={game.players.info} />
+            <PlayersInfo game={game} />
             {game.state === "CREATED" && (
               <>
                 <GameSetting

@@ -50,7 +50,7 @@ export default async function handler(
     });
 
     const token = signJwtToken({
-      id: result.data.insert_player_one.id,
+      userId: result.data.insert_player_one.id,
       username,
     });
 

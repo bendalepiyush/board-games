@@ -6,7 +6,20 @@ export const BUY_PROPERTY = gql`
     $playerId: uuid!
     $propertiesOwned: Int!
     $location: Int!
+    $availableCash: Int!
   ) {
+    update_monopoly_game_participant(
+      where: {
+        game_id: { _eq: $gameId }
+        _and: { player_id: { _eq: $playerId } }
+      }
+      _set: { available_cash: $availableCash }
+    ) {
+      returning {
+        id
+      }
+    }
+
     insert_monopoly_participant_properties(
       objects: {
         properties_owned: $propertiesOwned
