@@ -1,6 +1,5 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiResponse } from "next";
 import { verifyToken } from "@/js/jwt";
-import { JwtPayload } from "@/types/jwt";
 import { ExtendedNextApiRequest } from "@/types/jwt";
 
 export const authenticate =

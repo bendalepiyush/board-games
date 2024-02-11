@@ -44,7 +44,7 @@ export default async function handler(
 
     const { id, username } = data.player[0];
     const token = signJwtToken({
-      id,
+      userId: id,
       username,
     });
 

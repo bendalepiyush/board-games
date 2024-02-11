@@ -14,22 +14,29 @@
   .userContainer {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 18px;
+    color: white;
 
-    .colorContainer {
-      height: 32px;
-      width: 32px;
-      border-radius: 50%;
-      display: inline-block;
-    }
+    .nameHolder {
+      display: flex;
+      align-items: center;
 
-    .user {
-      color: white;
-      font-size: 1.2em;
-    }
+      .colorContainer {
+        height: 32px;
+        width: 32px;
+        border-radius: 50%;
+        display: inline-block;
+        margin: 5px 10px;
+      }
 
-    .iconContainer {
-      margin-left: 12px;
+      .user {
+        font-size: 1.2em;
+      }
+
+      .iconContainer {
+        margin-left: 12px;
+      }
     }
   }
 }

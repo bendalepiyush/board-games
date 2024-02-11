@@ -1,7 +1,7 @@
 import { NextApiRequest } from "next";
 
 type User = {
-  id: string;
+  userId: string;
   username: string;
 };
 

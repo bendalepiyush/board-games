@@ -35,12 +35,6 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
       .json({ error: "Method Not Allowed. Expecting POST." });
   }
 
-  const userInfo = req.user;
-
-  if (!userInfo) {
-    return res.status(400).json({ error: "missing information in token." });
-  }
-
   const { gameId, startingCash, playerIds } = req.body;
 
   if (!gameId || !startingCash || !playerIds) {

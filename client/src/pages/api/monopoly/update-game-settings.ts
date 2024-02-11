@@ -29,13 +29,7 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
       .json({ error: "Method Not Allowed. Expecting POST." });
   }
 
-  const userInfo = req.user;
-
-  if (!userInfo) {
-    return res.status(400).json({ error: "id (userId) field missing." });
-  }
-
-  const userId = userInfo.id;
+  const { userId } = req.user;
 
   const {
     gameId,

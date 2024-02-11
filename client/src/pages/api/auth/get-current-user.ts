@@ -8,9 +8,9 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    const { id, username } = req.user;
+    const { userId, username } = req.user;
 
-    res.json({ id, username });
+    res.json({ userId, username });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }
