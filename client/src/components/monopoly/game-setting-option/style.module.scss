@@ -17,19 +17,22 @@
 
   .option {
     font-size: 1.2em;
+    font-weight: 500;
+    margin: 0;
   }
 
   .subText {
     color: #8f80b3;
-    font-size: 0.8em;
+    font-size: 1em;
+    margin: 0;
   }
 
   select {
     border: none;
-    padding: 5px;
+    padding: 7px;
     outline: none;
     color: white;
-    font-size: 0.7em;
+    font-size: 1em;
     border-radius: 6px;
     background-color: #3e3752;
   }

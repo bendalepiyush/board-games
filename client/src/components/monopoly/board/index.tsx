@@ -217,14 +217,13 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
           return (
             <div
               key={index}
-              className={styles.singleCard}
+              className={styles.centerCard}
               style={{
                 order: item.order,
                 gridRowStart: item.gridSpan,
                 gridColumnStart: item.gridSpan,
               }}
             >
-              Center
               {gameState === "CREATED" && gameSettings.isAdmin && (
                 <button onClick={startGame}>Start Game</button>
               )}

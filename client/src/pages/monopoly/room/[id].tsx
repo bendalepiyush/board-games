@@ -152,7 +152,26 @@ const Room = () => {
   }, [data, currentUserId]);
 
   // Responsive Mangement
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (!ref.current) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      const width = ref.current?.offsetWidth || 50;
+      const height = ref.current?.offsetHeight || 50;
+
+      const smaller = width > height ? height : width;
+      const temp = `minmax(200px, 1fr) ${smaller}px minmax(200px, 1fr)`;
+
+      setGridTemplate(temp);
+
+      console.log(gridTemplate);
+    });
+
+    resizeObserver.observe(ref.current);
+
+    return () => resizeObserver.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (loading) {
     return <div>Loading..</div>;
@@ -217,7 +236,7 @@ const Room = () => {
 
   return (
     <ProtectRoute>
-      <div className={styles.container}>
+      <>
         <JoinGameContainer
           hasJoinedGame={game.user.hasJoinedGame}
           roomFull={game.isRoomFull}
@@ -226,7 +245,6 @@ const Room = () => {
           selectColor={selectColor}
           joinGame={joinGame}
         />
-
         <div
           className={styles.container}
           ref={ref}
@@ -263,7 +281,7 @@ const Room = () => {
             )}
           </div>
         </div>
-      </div>
+      </>
     </ProtectRoute>
   );
 };
