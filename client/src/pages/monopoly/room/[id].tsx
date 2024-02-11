@@ -13,47 +13,13 @@ import { Role, User } from "@/types/user";
 import { GAME_SUBSCRIPTION } from "@/queries/gameSubscription";
 import { GameData, Game } from "@/types/monopolyGame";
 import JoinGameContainer from "@/components/monopoly/join-game-container";
-
-const DEFAULT_GAME_INFO: Game = {
-  user: {
-    hasJoinedGame: false,
-    isAdmin: false,
-    role: "VIEWER",
-  },
-  players: {
-    location: [],
-    choosenColors: [],
-    info: [],
-    playerSequence: [],
-  },
-  settings: {
-    privateRoom: true,
-    maxPlayers: 4,
-    x2RentOnFullSet: true,
-    vacationCashAllowed: true,
-    auction: true,
-    noRentCollectionInPrison: true,
-    evenBuild: true,
-    randomPlayerOrder: true,
-    startingCash: 0,
-  },
-  state: "CREATED",
-  currentPlayerTurn: "",
-  dice: {
-    state: {
-      diceOne: 0,
-      diceTwo: 0,
-    },
-    isRollDice: false,
-  },
-  isRoomFull: false,
-};
+import { DEFAULT_MONOPOLY_GAME_INFO } from "@/js/constant";
 
 const Room = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const [game, setGame] = useState<Game>(DEFAULT_GAME_INFO);
+  const [game, setGame] = useState<Game>(DEFAULT_MONOPOLY_GAME_INFO);
   const [gameId, setGameId] = useState<string>("");
   const [currentUserId, setCurrentUserId] = useState<string>("");
   const [selectedPlayerColor, setSelectedPlayerColor] = useState<string>("");
@@ -109,6 +75,7 @@ const Room = () => {
       roll_dice,
       dice_values,
       admin,
+      monopoly_participant_properties,
     } = gameData;
 
     const playerMap: PlayersMap = {};
@@ -125,6 +92,7 @@ const Room = () => {
         color: display_color,
         name: player.username,
         id,
+        playerId: player_id,
       };
 
       playerMap[current_position] = playerMap[current_position] || [];
@@ -167,6 +135,7 @@ const Room = () => {
         choosenColors: choosenColors,
         info: playersInfo,
         playerSequence: player_sequence,
+        properties: monopoly_participant_properties,
       },
       state: game_state,
       currentPlayerTurn: current_player_turn_id,
@@ -295,6 +264,9 @@ const Room = () => {
             }}
             diceValues={game.dice.state}
             playersMap={game.players.location}
+            properties={game.players.properties}
+            currentUserId={currentUserId}
+            gameId={gameId}
           />
           <div className={styles.rightSection}>
             <PlayersInfo data={game.players.info} />
