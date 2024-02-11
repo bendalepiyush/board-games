@@ -1,6 +1,6 @@
 .switchContainer {
   width: 40px;
-  height: 22px;
+  height: 24px;
   display: flex;
   border-radius: 20px;
   align-items: center;
@@ -9,8 +9,8 @@
   cursor: pointer;
 
   .switch {
-    width: 10px;
-    height: 10px;
+    width: 15px;
+    height: 15px;
     border-radius: 50%;
     background-color: white;
     margin: 0px 5px;
@@ -19,7 +19,7 @@
 
 .switched {
   justify-content: flex-end;
-  background-color: #6647e0;
+  background-color: #f15000;
 }
 
 .disabled {

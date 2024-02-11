@@ -80,113 +80,111 @@ const GameSetting: React.FC<GameSettingProps> = ({
   };
 
   return (
-    <div style={{ color: "white" }}>
-      <div className={styles.card}>
-        {isLoading && <div className={styles.loaderContainer}></div>}
+    <div className={styles.card}>
+      {isLoading && <div className={styles.loaderContainer}></div>}
 
-        <h2 className={styles.title}>Game settings</h2>
+      <h2 className={styles.title}>Game settings</h2>
 
-        <Option
-          mainText="Maximum players"
-          subText="How many players can join the game"
-          role={role}
-          updateSetting={(value) => {
-            updateGameSettings("maxPlayers", value);
-          }}
-          icon="account-group"
-          type="SELECT"
-          selectOptions={maxPlayerOptions}
-          selectedOption={gameSettings.maxPlayers}
-        />
+      <Option
+        mainText="Maximum players"
+        subText="How many players can join the game"
+        role={role}
+        updateSetting={(value) => {
+          updateGameSettings("maxPlayers", value);
+        }}
+        icon="account-group"
+        type="SELECT"
+        selectOptions={maxPlayerOptions}
+        selectedOption={gameSettings.maxPlayers}
+      />
 
-        <Option
-          mainText="Private room"
-          subText="Private rooms can be accessed using the room URL only"
-          role={role}
-          updateSetting={(value) => {
-            updateGameSettings("privateRoom", value);
-          }}
-          icon="key"
-          type="SWITCH"
-          active={gameSettings.privateRoom}
-        />
+      <Option
+        mainText="Private room"
+        subText="Private rooms can be accessed using the room URL only"
+        role={role}
+        updateSetting={(value) => {
+          updateGameSettings("privateRoom", value);
+        }}
+        icon="key"
+        type="SWITCH"
+        active={gameSettings.privateRoom}
+      />
 
-        <div className={styles.divider} />
+      <div className={styles.divider} />
 
-        <h2 className={styles.title}>Gameplay rules</h2>
+      <h2 className={styles.title}>Gameplay rules</h2>
 
-        <Option
-          mainText="x2 rent on full-set properties"
-          subText="If a player owns a full property set, the base rent payment will be doubled"
-          role={role}
-          updateSetting={(value) => {
-            updateGameSettings("x2RentOnFullSet", value);
-          }}
-          icon="database"
-          type="SWITCH"
-          active={gameSettings.x2RentOnFullSet}
-        />
+      <Option
+        mainText="x2 rent on full-set properties"
+        subText="If a player owns a full property set, the base rent payment will be doubled"
+        role={role}
+        updateSetting={(value) => {
+          updateGameSettings("x2RentOnFullSet", value);
+        }}
+        icon="database"
+        type="SWITCH"
+        active={gameSettings.x2RentOnFullSet}
+      />
 
-        <Option
-          mainText="Vacation cash"
-          subText="If a player lands on Vacation, all collected money from taxes and bank payments will be earned"
-          role={role}
-          updateSetting={(value) => {
-            updateGameSettings("vacationCashAllowed", value);
-          }}
-          icon="vacation"
-          type="SWITCH"
-          active={gameSettings.vacationCashAllowed}
-        />
+      <Option
+        mainText="Vacation cash"
+        subText="If a player lands on Vacation, all collected money from taxes and bank payments will be earned"
+        role={role}
+        updateSetting={(value) => {
+          updateGameSettings("vacationCashAllowed", value);
+        }}
+        icon="vacation"
+        type="SWITCH"
+        active={gameSettings.vacationCashAllowed}
+      />
 
-        <Option
-          mainText="Auction"
-          subText="If someone skips purchasing the property landed on, it will be sold to the highest bidder"
-          role={role}
-          updateSetting={(value) => {
-            updateGameSettings("auction", value);
-          }}
-          icon="auction"
-          type="SWITCH"
-          active={gameSettings.auction}
-        />
+      <Option
+        mainText="Auction"
+        subText="If someone skips purchasing the property landed on, it will be sold to the highest bidder"
+        role={role}
+        updateSetting={(value) => {
+          updateGameSettings("auction", value);
+        }}
+        icon="auction"
+        type="SWITCH"
+        active={gameSettings.auction}
+      />
 
-        <Option
-          mainText="Don't collect rent while in prison"
-          subText="Rent will not be collected when landing on properties whose owners are in prison"
-          role={role}
-          updateSetting={(value) => {
-            updateGameSettings("noRentCollectionInPrison", value);
-          }}
-          icon="house"
-          type="SWITCH"
-          active={gameSettings.noRentCollectionInPrison}
-        />
+      <Option
+        mainText="Don't collect rent while in prison"
+        subText="Rent will not be collected when landing on properties whose owners are in prison"
+        role={role}
+        updateSetting={(value) => {
+          updateGameSettings("noRentCollectionInPrison", value);
+        }}
+        icon="house"
+        type="SWITCH"
+        active={gameSettings.noRentCollectionInPrison}
+      />
 
-        <Option
-          mainText="Even build"
-          subText="Houses and hotels must be built up and sold off evenly within a property set"
-          role={role}
-          updateSetting={(value) => {
-            updateGameSettings("evenBuild", value);
-          }}
-          icon="down-trend"
-          type="SWITCH"
-          active={gameSettings.evenBuild}
-        />
+      <Option
+        mainText="Even build"
+        subText="Houses and hotels must be built up and sold off evenly within a property set"
+        role={role}
+        updateSetting={(value) => {
+          updateGameSettings("evenBuild", value);
+        }}
+        icon="down-trend"
+        type="SWITCH"
+        active={gameSettings.evenBuild}
+      />
 
-        <Option
-          mainText="Randomize player order"
-          subText="Randomly reorder players at the beginning of the game"
-          role={role}
-          updateSetting={(value) => {
-            updateGameSettings("randomPlayerOrder", value);
-          }}
-          icon="sync"
-          type="SWITCH"
-          active={gameSettings.randomPlayerOrder}
-        />
-      </div>
+      <Option
+        mainText="Randomize player order"
+        subText="Randomly reorder players at the beginning of the game"
+        role={role}
+        updateSetting={(value) => {
+          updateGameSettings("randomPlayerOrder", value);
+        }}
+        icon="sync"
+        type="SWITCH"
+        active={gameSettings.randomPlayerOrder}
+      />
     </div>
   );
 };

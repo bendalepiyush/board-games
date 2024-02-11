@@ -58,6 +58,10 @@ const Room = () => {
   const [currentUserId, setCurrentUserId] = useState<string>("");
   const [selectedPlayerColor, setSelectedPlayerColor] = useState<string>("");
 
+  const [gridTemplate, setGridTemplate] = useState<string>("");
+
+  const ref = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     if (!localStorage.getItem("token")) {
       router.replace("/auth/login");
@@ -179,7 +183,26 @@ const Room = () => {
   }, [data, currentUserId]);
 
   // Responsive Mangement
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (!ref.current) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      const width = ref.current?.offsetWidth || 50;
+      const height = ref.current?.offsetHeight || 50;
+
+      const smaller = width > height ? height : width;
+      const temp = `minmax(200px, 1fr) ${smaller}px minmax(200px, 1fr)`;
+
+      setGridTemplate(temp);
+
+      console.log(gridTemplate);
+    });
+
+    resizeObserver.observe(ref.current);
+
+    return () => resizeObserver.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (loading) {
     return <div>Loading..</div>;
@@ -244,7 +267,7 @@ const Room = () => {
 
   return (
     <ProtectRoute>
-      <div className={styles.container}>
+      <>
         <JoinGameContainer
           hasJoinedGame={game.user.hasJoinedGame}
           roomFull={game.isRoomFull}
@@ -253,35 +276,40 @@ const Room = () => {
           selectColor={selectColor}
           joinGame={joinGame}
         />
-
-        <div>Left Section</div>
-        <MonopolyBoard
-          endTurn={endTurn}
-          rollDice={rollDice}
-          startGame={startGame}
-          gameState={game.state}
-          gameSettings={{
-            userId: currentUserId,
-            cureentPlayerTurnId: game.currentPlayerTurn,
-            rollDice: game.dice.isRollDice,
-            isAdmin: game.user.isAdmin,
-          }}
-          diceValues={game.dice.state}
-          playersMap={game.players.location}
-        />
-        <div>
-          <PlayersInfo data={game.players.info} />
-          {game.state === "CREATED" && (
-            <>
-              <GameSetting
-                gameId={gameId}
-                role={game.user.role}
-                gameSettings={game.settings}
-              />
-            </>
-          )}
+        <div
+          className={styles.container}
+          ref={ref}
+          style={{ gridTemplateColumns: gridTemplate }}
+        >
+          <div>Left Section</div>
+          <MonopolyBoard
+            endTurn={endTurn}
+            rollDice={rollDice}
+            startGame={startGame}
+            gameState={game.state}
+            gameSettings={{
+              userId: currentUserId,
+              cureentPlayerTurnId: game.currentPlayerTurn,
+              rollDice: game.dice.isRollDice,
+              isAdmin: game.user.isAdmin,
+            }}
+            diceValues={game.dice.state}
+            playersMap={game.players.location}
+          />
+          <div className={styles.rightSection}>
+            <PlayersInfo data={game.players.info} />
+            {game.state === "CREATED" && (
+              <>
+                <GameSetting
+                  gameId={gameId}
+                  role={game.user.role}
+                  gameSettings={game.settings}
+                />
+              </>
+            )}
+          </div>
         </div>
-      </div>
+      </>
     </ProtectRoute>
   );
 };

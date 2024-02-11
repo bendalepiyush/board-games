@@ -17,7 +17,7 @@ const PlayersInfo: React.FC<PlayerInfoProps> = ({ data }) => {
   return (
     <div className={styles.card}>
       {data.length === 0 ? (
-        <h2 className={styles.title}>Waiting for players...</h2>
+        <p className={styles.title}>Waiting for players...</p>
       ) : (
         data.map((u, index) => {
           return (
@@ -26,12 +26,12 @@ const PlayersInfo: React.FC<PlayerInfoProps> = ({ data }) => {
                 className={`${styles.colorContainer}`}
                 style={{ backgroundColor: u.displayColor }}
               />
-              <h2 className={styles.user}>{u.username}</h2>
-              {u.isAdmin && (
-                <div className={styles.iconContainer}>
-                  <FaCrown color="yellow" />
-                </div>
-              )}
+              <span className={styles.user}>
+                {u.username}
+                {u.isAdmin && (
+                  <FaCrown className={styles.iconContainer} color="yellow" />
+                )}
+              </span>
             </div>
           );
         })
