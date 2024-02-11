@@ -37,13 +37,7 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
       },
     });
 
-    return res.json({
-      msg: "In work",
-      gameId,
-      propertiesOwned,
-      location,
-      buyPropRes,
-    });
+    return res.json(buyPropRes);
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }

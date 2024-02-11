@@ -13,51 +13,20 @@ import { Role, User } from "@/types/user";
 import { GAME_SUBSCRIPTION } from "@/queries/gameSubscription";
 import { GameData, Game } from "@/types/monopolyGame";
 import JoinGameContainer from "@/components/monopoly/join-game-container";
-
-const DEFAULT_GAME_INFO: Game = {
-  user: {
-    hasJoinedGame: false,
-    isAdmin: false,
-    role: "VIEWER",
-  },
-  players: {
-    location: [],
-    choosenColors: [],
-    info: [],
-    playerSequence: [],
-    properties: [],
-  },
-  settings: {
-    privateRoom: true,
-    maxPlayers: 4,
-    x2RentOnFullSet: true,
-    vacationCashAllowed: true,
-    auction: true,
-    noRentCollectionInPrison: true,
-    evenBuild: true,
-    randomPlayerOrder: true,
-    startingCash: 0,
-  },
-  state: "CREATED",
-  currentPlayerTurn: "",
-  dice: {
-    state: {
-      diceOne: 0,
-      diceTwo: 0,
-    },
-    isRollDice: false,
-  },
-  isRoomFull: false,
-};
+import { DEFAULT_MONOPOLY_GAME_INFO } from "@/js/constant";
 
 const Room = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const [game, setGame] = useState<Game>(DEFAULT_GAME_INFO);
+  const [game, setGame] = useState<Game>(DEFAULT_MONOPOLY_GAME_INFO);
   const [gameId, setGameId] = useState<string>("");
   const [currentUserId, setCurrentUserId] = useState<string>("");
   const [selectedPlayerColor, setSelectedPlayerColor] = useState<string>("");
+
+  const [gridTemplate, setGridTemplate] = useState<string>("");
+
+  const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -95,7 +64,7 @@ const Room = () => {
 
     const gameData: GameData = data.monopoly_game_by_pk;
 
-    console.log("gameData", gameData);
+    // console.log("gameData", gameData);
 
     const {
       monopoly_game_participants,
@@ -208,11 +177,9 @@ const Room = () => {
 
   const rollDice = async () => {
     try {
-      const res = await makeRequest("api/monopoly/roll-dice", {
+      await makeRequest("api/monopoly/roll-dice", {
         gameId,
       });
-
-      console.log(res.data);
     } catch (err) {
       console.error(err);
     }
@@ -260,35 +227,41 @@ const Room = () => {
           joinGame={joinGame}
         />
 
-        <div>Left Section</div>
-        <MonopolyBoard
-          endTurn={endTurn}
-          rollDice={rollDice}
-          startGame={startGame}
-          gameState={game.state}
-          gameSettings={{
-            userId: currentUserId,
-            cureentPlayerTurnId: game.currentPlayerTurn,
-            rollDice: game.dice.isRollDice,
-            isAdmin: game.user.isAdmin,
-          }}
-          diceValues={game.dice.state}
-          playersMap={game.players.location}
-          properties={game.players.properties}
-          currentUserId={currentUserId}
-          gameId={gameId}
-        />
-        <div>
-          <PlayersInfo data={game.players.info} />
-          {game.state === "CREATED" && (
-            <>
-              <GameSetting
-                gameId={gameId}
-                role={game.user.role}
-                gameSettings={game.settings}
-              />
-            </>
-          )}
+        <div
+          className={styles.container}
+          ref={ref}
+          style={{ gridTemplateColumns: gridTemplate }}
+        >
+          <div>Left Section</div>
+          <MonopolyBoard
+            endTurn={endTurn}
+            rollDice={rollDice}
+            startGame={startGame}
+            gameState={game.state}
+            gameSettings={{
+              userId: currentUserId,
+              cureentPlayerTurnId: game.currentPlayerTurn,
+              rollDice: game.dice.isRollDice,
+              isAdmin: game.user.isAdmin,
+            }}
+            diceValues={game.dice.state}
+            playersMap={game.players.location}
+            properties={game.players.properties}
+            currentUserId={currentUserId}
+            gameId={gameId}
+          />
+          <div className={styles.rightSection}>
+            <PlayersInfo data={game.players.info} />
+            {game.state === "CREATED" && (
+              <>
+                <GameSetting
+                  gameId={gameId}
+                  role={game.user.role}
+                  gameSettings={game.settings}
+                />
+              </>
+            )}
+          </div>
         </div>
       </div>
     </ProtectRoute>
