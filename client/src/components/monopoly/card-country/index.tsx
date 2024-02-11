@@ -88,7 +88,7 @@ const CardCountry: React.FC<CountryCard> = ({
           <div
             className={styles.priceTag}
             style={{
-              fontSize: `${fontSize * 0.9}em`,
+              fontSize: `${fontSize * 0.8}em`,
             }}
           >
             {price}
@@ -98,7 +98,7 @@ const CardCountry: React.FC<CountryCard> = ({
           <p
             className={styles.title}
             style={{
-              fontSize: `${fontSize}em`,
+              fontSize: `${fontSize * 0.9}em`,
             }}
           >
             {title}
@@ -108,7 +108,7 @@ const CardCountry: React.FC<CountryCard> = ({
               className={styles.logoContainer}
               style={{
                 backgroundImage: `url('${countryLogo}')`,
-                width: `${width * 0.45}px`,
+                width: `${width * 0.4}px`,
               }}
             />
           </div>

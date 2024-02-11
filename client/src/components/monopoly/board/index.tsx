@@ -34,6 +34,7 @@ type MonopolyBoardProps = {
   properties: Property[];
   currentUserId: string;
   gameId: string;
+  blurOut: boolean;
 };
 
 const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
@@ -47,6 +48,7 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
   properties,
   currentUserId,
   gameId,
+  blurOut,
 }) => {
   const [isEligibleForTrade, setIsEligibleForTrade] = useState(false);
   const [price, setPrice] = useState(0);
@@ -101,8 +103,13 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
     }
   };
 
+  console.log(blurOut);
+
   return (
-    <div className={styles.container}>
+    <div
+      className={styles.container}
+      style={blurOut ? { filter: "blur(5px)" } : {}}
+    >
       {CLASSIC_MAP.map((item, index) => {
         if (item.type === "Country") {
           return (

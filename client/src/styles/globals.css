@@ -5,12 +5,12 @@
     "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
 
   --white: #fff;
-  --background-primary: #000;
+  --background-primary: #000000;
 
-  --monopoly-card-background: rgb(38, 38, 38);
-  --monopoly-card-border: #241f3d;
-  --monopoly-card-corner-desc-text: #e2e1e6;
-  --monopoly-card-price-text-bg: rgb(255, 255, 255, 0.2);
+  --monopoly-card-background: rgba(255, 255, 255, 0.1);
+  --monopoly-card-border: #ffffff;
+  --monopoly-card-corner-desc-text: #ffffff;
+  --monopoly-card-price-text-bg: rgba(255, 255, 255, 0.1);
 }
 
 * {

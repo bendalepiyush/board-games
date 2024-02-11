@@ -237,37 +237,40 @@ const Room = () => {
   return (
     <ProtectRoute>
       <>
-        <JoinGameContainer
-          hasJoinedGame={game.user.hasJoinedGame}
-          roomFull={game.isRoomFull}
-          selectedPlayerColor={selectedPlayerColor}
-          userSelectedColors={game.players.choosenColors}
-          selectColor={selectColor}
-          joinGame={joinGame}
-        />
         <div
           className={styles.container}
           ref={ref}
           style={{ gridTemplateColumns: gridTemplate }}
         >
           <div>Left Section</div>
-          <MonopolyBoard
-            endTurn={endTurn}
-            rollDice={rollDice}
-            startGame={startGame}
-            gameState={game.state}
-            gameSettings={{
-              userId: currentUserId,
-              cureentPlayerTurnId: game.currentPlayerTurn,
-              rollDice: game.dice.isRollDice,
-              isAdmin: game.user.isAdmin,
-            }}
-            diceValues={game.dice.state}
-            playersMap={game.players.location}
-            properties={game.players.properties}
-            currentUserId={currentUserId}
-            gameId={gameId}
-          />
+          <div className={styles.gameboard}>
+            <JoinGameContainer
+              hasJoinedGame={game.user.hasJoinedGame}
+              roomFull={game.isRoomFull}
+              selectedPlayerColor={selectedPlayerColor}
+              userSelectedColors={game.players.choosenColors}
+              selectColor={selectColor}
+              joinGame={joinGame}
+            />
+            <MonopolyBoard
+              endTurn={endTurn}
+              rollDice={rollDice}
+              startGame={startGame}
+              gameState={game.state}
+              gameSettings={{
+                userId: currentUserId,
+                cureentPlayerTurnId: game.currentPlayerTurn,
+                rollDice: game.dice.isRollDice,
+                isAdmin: game.user.isAdmin,
+              }}
+              diceValues={game.dice.state}
+              playersMap={game.players.location}
+              properties={game.players.properties}
+              currentUserId={currentUserId}
+              gameId={gameId}
+              blurOut={!game.user.hasJoinedGame}
+            />
+          </div>
           <div className={styles.rightSection}>
             <PlayersInfo data={game.players.info} />
             {game.state === "CREATED" && (
