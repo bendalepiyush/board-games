@@ -255,28 +255,31 @@ const Room = () => {
   return (
     <ProtectRoute>
       <>
-        <JoinGameContainer
-          hasJoinedGame={game.user.hasJoinedGame}
-          roomFull={game.isRoomFull}
-          selectedPlayerColor={selectedPlayerColor}
-          userSelectedColors={game.players.choosenColors}
-          selectColor={selectColor}
-          joinGame={joinGame}
-        />
         <div
           className={styles.container}
           ref={ref}
           style={{ gridTemplateColumns: gridTemplate }}
         >
           <div>Left Section</div>
-          <MonopolyBoard
-            endTurn={endTurn}
-            rollDice={rollDice}
-            startGame={startGame}
-            game={game}
-            currentUserId={currentUserId}
-            gameId={gameId}
-          />
+          <div className={styles.gameboard}>
+            <JoinGameContainer
+              hasJoinedGame={game.user.hasJoinedGame}
+              roomFull={game.isRoomFull}
+              selectedPlayerColor={selectedPlayerColor}
+              userSelectedColors={game.players.choosenColors}
+              selectColor={selectColor}
+              joinGame={joinGame}
+            />
+            <MonopolyBoard
+              endTurn={endTurn}
+              rollDice={rollDice}
+              startGame={startGame}
+              game={game}
+              currentUserId={currentUserId}
+              gameId={gameId}
+              blurOut={!game.user.hasJoinedGame}
+            />
+          </div>
           <div className={styles.rightSection}>
             <PlayersInfo game={game} />
             {game.state === "CREATED" && (

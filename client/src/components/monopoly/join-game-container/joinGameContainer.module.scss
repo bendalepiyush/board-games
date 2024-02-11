@@ -2,21 +2,41 @@
   position: absolute;
   height: 100%;
   width: 100%;
-  background-color: rgba($color: #000000, $alpha: 0.7);
-  z-index: 1;
+  flex-direction: column;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #00000095;
+
+  .content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 72px;
+  }
+
+  .options {
+    display: grid;
+    grid-template-columns: repeat(4, 72px);
+    grid-auto-rows: 72px;
+    gap: 18px;
+  }
 
   .colorContainer {
-    height: 20px;
-    width: 20px;
+    height: 54px;
+    width: 54px;
     border-radius: 50%;
     background-color: yellow;
-    display: inline-block;
-    margin: 20px;
+    justify-self: center;
+    align-self: center;
+    z-index: 2;
   }
 
   .selectedColorContainer {
-    height: 30px;
-    width: 30px;
+    height: 72px;
+    width: 72px;
   }
 
   .disabled {
