@@ -7,7 +7,7 @@
   --white: #fff;
   --background-primary: #000;
 
-  --monopoly-card-background: #2d274c;
+  --monopoly-card-background: rgb(38, 38, 38);
   --monopoly-card-border: #241f3d;
   --monopoly-card-corner-desc-text: #e2e1e6;
   --monopoly-card-price-text-bg: rgb(255, 255, 255, 0.2);

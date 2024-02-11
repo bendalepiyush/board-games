@@ -1,6 +1,6 @@
 .card {
   border-radius: 5px;
-  background-color: #29203f;
+  background-color: rgba(255, 255, 255, 0.1);
   position: relative;
   color: #fff;
   height: auto;
@@ -21,13 +21,13 @@
 
   .divider {
     height: 1px;
-    background-color: #8f80b3;
+    background-color: rgba(255, 255, 255, 0.2);
     margin: 10px;
   }
 
   .title {
     font-size: 1em;
-    color: #8f80b3;
+    color: rgba(255, 255, 255, 0.2);
     text-align: center;
   }
 
@@ -41,7 +41,7 @@
       margin: 5px;
       width: 25px;
       height: 25px;
-      fill: #8f80b3;
+      fill: rgba(255, 255, 255, 0.2);
     }
 
     .textHolder {

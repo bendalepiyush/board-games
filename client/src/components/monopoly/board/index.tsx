@@ -159,9 +159,16 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
                 gridColumnStart: item.gridSpan,
               }}
             >
+              <span style={{ color: "white", margin: "40px" }}>
+                <span>{diceValues.diceOne}</span>
+                <span> - </span>
+                <span>{diceValues.diceTwo}</span>
+              </span>
+
               {gameState === "CREATED" && gameSettings.isAdmin && (
                 <button onClick={startGame}>Start Game</button>
               )}
+
               {gameState === "STARTED" &&
                 gameSettings.userId === gameSettings.cureentPlayerTurnId &&
                 (gameSettings.rollDice ? (
@@ -169,11 +176,8 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
                 ) : (
                   <button onClick={endTurn}>End Turn</button>
                 ))}
-              <h1 style={{ color: "white", margin: "40px" }}>
-                <span>{diceValues.diceOne}</span>
-                <span> - </span>
-                <span>{diceValues.diceTwo}</span>
-              </h1>
+
+              <div className={styles.gameFeed}></div>
             </div>
           );
         }
