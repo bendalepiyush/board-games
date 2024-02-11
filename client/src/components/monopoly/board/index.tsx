@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import styles from "./style.module.scss";
 import CardCorner from "../card-corner";
@@ -8,6 +8,12 @@ import CardSurprise from "../card-surprise";
 import { CLASSIC_MAP } from "@/maps/classic-map";
 import CardCompany from "../card-company";
 import { PlayersMap } from "@/maps/types";
+import { Property } from "@/types/monopolyGame";
+import { makeRequest } from "@/js/api";
+import {
+  MONOPOLY_CLASSIC_PROPERTY_MAP,
+  TRADEABLE_LOCATION,
+} from "@/js/constant";
 
 type MonopolyBoardProps = {
   startGame: () => void;
@@ -25,6 +31,9 @@ type MonopolyBoardProps = {
     diceTwo: number;
   };
   playersMap: PlayersMap;
+  properties: Property[];
+  currentUserId: string;
+  gameId: string;
 };
 
 const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
@@ -35,7 +44,63 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
   endTurn,
   diceValues,
   playersMap,
+  properties,
+  currentUserId,
+  gameId,
 }) => {
+  const [isEligibleForTrade, setIsEligibleForTrade] = useState(false);
+  const [price, setPrice] = useState(0);
+  const [currLocation, setCurrLocation] = useState(0);
+
+  useEffect(() => {
+    const tradedLocations: number[] = [];
+    const locationsOwnedByOthers: number[] = [];
+
+    properties.forEach((prop: { player_id: string; location: number }) => {
+      tradedLocations.push(prop.location);
+
+      if (prop.player_id !== currentUserId) {
+        locationsOwnedByOthers.push(prop.location);
+      }
+    });
+
+    let currentLocation = 0;
+
+    Object.keys(playersMap).forEach((k) => {
+      const index = parseInt(k);
+
+      if (playersMap[index][0].playerId === currentUserId) {
+        currentLocation = parseInt(k);
+      }
+    });
+
+    setCurrLocation(currentLocation);
+
+    let canTrade = false;
+    if (
+      TRADEABLE_LOCATION.includes(currentLocation) &&
+      !tradedLocations.includes(currentLocation)
+    ) {
+      canTrade = true;
+
+      setPrice(MONOPOLY_CLASSIC_PROPERTY_MAP[currentLocation].price.base);
+    }
+
+    setIsEligibleForTrade(canTrade);
+  }, [properties, currentUserId, playersMap, currLocation]);
+
+  const buyProp = async () => {
+    try {
+      await makeRequest("api/monopoly/buy-prop", {
+        gameId,
+        location: currLocation,
+        propertiesOwned: 0,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className={styles.container}>
       {CLASSIC_MAP.map((item, index) => {
@@ -174,7 +239,12 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
                 (gameSettings.rollDice ? (
                   <button onClick={rollDice}>Roll the dice</button>
                 ) : (
-                  <button onClick={endTurn}>End Turn</button>
+                  <>
+                    <button onClick={endTurn}>End Turn</button>
+                    {isEligibleForTrade && (
+                      <button onClick={buyProp}>Buy for ${price}</button>
+                    )}
+                  </>
                 ))}
 
               <div className={styles.gameFeed}></div>

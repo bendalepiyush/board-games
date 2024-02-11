@@ -16,6 +16,7 @@ type Player = {
   color: string;
   name: string;
   id: string;
+  playerId: string;
 };
 
 export type PlayersMap = {
@@ -71,3 +72,13 @@ export type CLASSIC_MAP_CARD =
   | SurpriseCard
   | Center
   | CompanyCard;
+
+type Property = {
+  price: {
+    base: number;
+  };
+};
+
+export type MonopolyGameClassicPropMap = {
+  [key: number]: Property;
+};

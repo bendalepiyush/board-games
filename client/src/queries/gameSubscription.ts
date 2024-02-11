@@ -24,6 +24,12 @@ export const GAME_SUBSCRIPTION = gql`
       }
       player_sequence
       settings
+      monopoly_participant_properties {
+        id
+        location
+        player_id
+        properties_owned
+      }
     }
   }
 `;

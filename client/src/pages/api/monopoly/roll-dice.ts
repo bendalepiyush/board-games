@@ -2,67 +2,9 @@ import { NextApiResponse } from "next";
 import { authenticate } from "../middleware/auth";
 import { ExtendedNextApiRequest } from "@/types/jwt";
 import { rollDices } from "@/js/util";
-import { gql } from "@apollo/client";
 import { apolloClient } from "@/apollo";
-
-const getGameDetailsQuery = gql`
-  query GetUser($gameId: uuid!, $currentPlayerId: uuid!) {
-    monopoly_game(
-      where: {
-        id: { _eq: $gameId }
-        _and: { current_player_turn_id: { _eq: $currentPlayerId } }
-      }
-    ) {
-      id
-      monopoly_game_participants(
-        where: {
-          player_id: { _eq: $currentPlayerId }
-          _and: { game_id: { _eq: $gameId } }
-        }
-      ) {
-        current_position
-        player_id
-      }
-      player_sequence
-    }
-  }
-`;
-
-const updatePlayerPositionMutation = gql`
-  mutation updatePlayerPosition(
-    $gameId: uuid!
-    $currentPlayerId: uuid!
-    $newPosition: Int!
-    $rollDice: Boolean!
-    $diceValues: json!
-  ) {
-    update_monopoly_game_participant(
-      where: {
-        game_id: { _eq: $gameId }
-        _and: { player_id: { _eq: $currentPlayerId } }
-      }
-      _set: { current_position: $newPosition }
-    ) {
-      returning {
-        id
-        player_id
-        current_position
-      }
-    }
-
-    update_monopoly_game(
-      where: {
-        id: { _eq: $gameId }
-        _and: { current_player_turn_id: { _eq: $currentPlayerId } }
-      }
-      _set: { roll_dice: $rollDice, dice_values: $diceValues }
-    ) {
-      returning {
-        roll_dice
-      }
-    }
-  }
-`;
+import { GET_GAME_DETAILS } from "@/queries/getGameDetails";
+import { UPDATE_PLAYER_POSITION } from "@/queries/updatePlayerPosition";
 
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
@@ -88,19 +30,25 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
     const diceValues = rollDices(2);
 
     const { data } = await apolloClient.query({
-      query: getGameDetailsQuery,
-      variables: { gameId, currentPlayerId: userId },
+      query: GET_GAME_DETAILS,
+      variables: { gameId },
       fetchPolicy: "network-only",
     });
 
     const diceValueSum = diceValues.reduce((acc, val) => acc + val, 0);
 
+    const currentPlayerTurnId = data.monopoly_game_by_pk.current_player_turn_id;
+
     const currentPosition =
-      data.monopoly_game[0].monopoly_game_participants[0].current_position;
+      data.monopoly_game_by_pk.monopoly_game_participants.find(
+        (p: { player_id: string; current_position: number }) =>
+          p.player_id === currentPlayerTurnId
+      ).current_position;
+
     const newPosition = (currentPosition + diceValueSum) % 40;
 
     const updatePositionRes = await apolloClient.mutate({
-      mutation: updatePlayerPositionMutation,
+      mutation: UPDATE_PLAYER_POSITION,
       variables: {
         gameId,
         currentPlayerId: userId,
