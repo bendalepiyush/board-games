@@ -2,7 +2,7 @@ import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 
 import styles from "./style.module.scss";
-import { SurpriseCard } from "@/maps/types";
+import { SurpriseCard } from "@/types/monopolyGame";
 import AvatarHolder from "../avatar-holder";
 
 const CardSurprise: React.FC<SurpriseCard> = ({

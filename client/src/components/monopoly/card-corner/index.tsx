@@ -2,7 +2,7 @@ import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 
 import styles from "./style.module.scss";
-import { CornerCard } from "@/maps/types";
+import { CornerCard } from "@/types/monopolyGame";
 
 import AvatarHolder from "../avatar-holder";
 
