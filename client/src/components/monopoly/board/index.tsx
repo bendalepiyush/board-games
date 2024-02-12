@@ -13,6 +13,7 @@ import {
   MONOPOLY_CLASSIC_PROPERTY_MAP,
   TRADEABLE_LOCATION,
 } from "@/js/constant";
+import Button from "@/components/button";
 
 type MonopolyBoardProps = {
   startGame: () => void;
@@ -232,22 +233,24 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
                 <span>{game.dice.state.diceTwo}</span>
               </span>
 
-              {game.state === "CREATED" && game.user.isAdmin && (
-                <button onClick={startGame}>Start Game</button>
-              )}
+              <div className={styles.buttonContainer}>
+                {game.state === "CREATED" && game.user.isAdmin && (
+                  <Button onclick={startGame}>Start Game</Button>
+                )}
 
-              {game.state === "STARTED" &&
-                currentUserId === game.currentPlayerTurn &&
-                (game.dice.isRollDice ? (
-                  <button onClick={rollDice}>Roll the dice</button>
-                ) : (
-                  <>
-                    <button onClick={endTurn}>End Turn</button>
-                    {isEligibleForTrade && (
-                      <button onClick={buyProp}>Buy for ${price}</button>
-                    )}
-                  </>
-                ))}
+                {game.state === "STARTED" &&
+                  currentUserId === game.currentPlayerTurn &&
+                  (game.dice.isRollDice ? (
+                    <Button onclick={rollDice}>Roll the dice</Button>
+                  ) : (
+                    <>
+                      <Button onclick={endTurn}>End Turn</Button>
+                      {isEligibleForTrade && (
+                        <Button onclick={buyProp}>Buy for ${price}</Button>
+                      )}
+                    </>
+                  ))}
+              </div>
 
               <div className={styles.gameFeed}></div>
             </div>
