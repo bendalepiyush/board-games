@@ -178,7 +178,8 @@ const Room = () => {
       const height = ref.current?.offsetHeight || 50;
 
       const smaller = width > height ? height : width;
-      const temp = `minmax(200px, 1fr) ${smaller}px minmax(200px, 1fr)`;
+      //const temp = `minmax(400px, 1fr) ${smaller}px minmax(400px, 1fr)`;
+      const temp = `1fr 2fr 1fr`;
 
       setGridTemplate(temp);
 

@@ -25,6 +25,7 @@ const JoinGameContainer: React.FC<JoinGameContainerProps> = ({
         <div className={styles.joinGameContainer}>
           <div className={styles.backgroundBlur}></div>
           <div className={styles.content}>
+            <span>Select your player appearance:</span>
             <div className={styles.options}>
               {colorOptions.map((color) => (
                 <div
@@ -36,7 +37,13 @@ const JoinGameContainer: React.FC<JoinGameContainerProps> = ({
                   } ${
                     userSelectedColors.includes(color) ? styles.disabled : ""
                   }`}
-                  style={{ backgroundColor: color }}
+                  style={{
+                    backgroundColor: color,
+                    boxShadow:
+                      selectedPlayerColor === color
+                        ? `0px 0px 48px 0px ${color}`
+                        : "",
+                  }}
                   onClick={() => selectColor(color)}
                 />
               ))}
