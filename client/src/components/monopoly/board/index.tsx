@@ -14,6 +14,7 @@ import {
   TRADEABLE_LOCATION,
 } from "@/js/constant";
 import Button from "@/components/button";
+import Dice from "../dice";
 
 type MonopolyBoardProps = {
   startGame: () => void;
@@ -231,6 +232,8 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
                 <span>{game.dice.state.diceOne}</span>
                 <span> - </span>
                 <span>{game.dice.state.diceTwo}</span>
+                <Dice number={game.dice.state.diceOne} />
+                <Dice number={game.dice.state.diceTwo} />
               </span>
 
               <div className={styles.buttonContainer}>
