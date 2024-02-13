@@ -151,6 +151,8 @@ const Room = () => {
         .forEach((property) => {
           propertyMap[property.location] = {
             color: display_color,
+            playerId: player_id,
+            propertiesOwned: property.properties_owned,
           };
         });
     });

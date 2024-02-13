@@ -82,6 +82,9 @@ export type MonopolyGameClassicPropMap = {
     price: {
       base: number;
     };
+    rent: {
+      [key: number]: number;
+    };
   };
 };
 
@@ -89,7 +92,7 @@ export type GameState = "CREATED" | "STARTED" | "ENDED";
 
 type Map = "classic_map";
 
-type MonopolyGameParticipant = {
+export type MonopolyGameParticipant = {
   available_cash: number;
   current_position: number;
   display_color: string;
@@ -125,6 +128,8 @@ export type Property = {
 export type PropertyMap = {
   [key: number]: {
     color: string;
+    playerId: string;
+    propertiesOwned: number;
   };
 };
 
