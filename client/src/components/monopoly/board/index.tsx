@@ -239,19 +239,19 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
                 {game.state === "CREATED" && game.user.isAdmin && (
                   <Button onclick={startGame}>Start Game</Button>
                 )}
-
                 {game.state === "STARTED" &&
-                  currentUserId === game.currentPlayerTurn &&
-                  (game.dice.isRollDice ? (
-                    <Button onclick={rollDice}>Roll the dice</Button>
-                  ) : (
+                  currentUserId === game.currentPlayerTurn && (
                     <>
-                      <Button onclick={endTurn}>End Turn</Button>
+                      {game.dice.isRollDice ? (
+                        <Button onclick={rollDice}>Roll the dice</Button>
+                      ) : (
+                        <Button onclick={endTurn}>End Turn</Button>
+                      )}
                       {isEligibleForTrade && (
                         <Button onclick={buyProp}>Buy for ${price}</Button>
                       )}
                     </>
-                  ))}
+                  )}
               </div>
 
               <div className={styles.gameFeed}></div>

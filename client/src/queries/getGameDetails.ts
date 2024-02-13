@@ -9,6 +9,7 @@ export const GET_GAME_DETAILS = gql`
         id
         player_id
         current_position
+        available_cash
       }
       monopoly_participant_properties {
         id

@@ -7,13 +7,33 @@ export const UPDATE_PLAYER_POSITION = gql`
     $newPosition: Int!
     $rollDice: Boolean!
     $diceValues: json!
+    $currentPlayerAvailableCash: Int!
+    $propertyOwnerId: uuid!
+    $propertyOwnerCash: Int!
   ) {
-    update_monopoly_game_participant(
+    currentUser: update_monopoly_game_participant(
       where: {
         game_id: { _eq: $gameId }
         _and: { player_id: { _eq: $currentPlayerId } }
       }
-      _set: { current_position: $newPosition }
+      _set: {
+        current_position: $newPosition
+        available_cash: $currentPlayerAvailableCash
+      }
+    ) {
+      returning {
+        id
+        player_id
+        current_position
+      }
+    }
+
+    propertyOwner: update_monopoly_game_participant(
+      where: {
+        game_id: { _eq: $gameId }
+        _and: { player_id: { _eq: $propertyOwnerId } }
+      }
+      _set: { available_cash: $propertyOwnerCash }
     ) {
       returning {
         id
