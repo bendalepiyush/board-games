@@ -4,14 +4,13 @@ import { useSubscription } from "@apollo/client";
 
 import styles from "./style.module.scss";
 import { makeRequest } from "@/js/api";
-import { PlayersMap } from "@/maps/types";
 import { ProtectRoute } from "@/components/protected-route";
 import MonopolyBoard from "@/components/monopoly/board";
 import GameSetting from "@/components/monopoly/game-setting";
 import PlayersInfo from "@/components/monopoly/player-info";
 import { Role, User } from "@/types/user";
 import { GAME_SUBSCRIPTION } from "@/queries/gameSubscription";
-import { GameData, Game } from "@/types/monopolyGame";
+import { GameData, Game, PropertyMap, PlayersMap } from "@/types/monopolyGame";
 import JoinGameContainer from "@/components/monopoly/join-game-container";
 import { DEFAULT_MONOPOLY_GAME_INFO } from "@/js/constant";
 
@@ -141,6 +140,23 @@ const Room = () => {
       isAdmin = true;
     }
 
+    // Property Map
+    const propertyMap: PropertyMap = {};
+
+    monopoly_game_participants.forEach((participant) => {
+      const { player_id, display_color } = participant;
+
+      monopoly_participant_properties
+        .filter((property) => property.player_id === player_id)
+        .forEach((property) => {
+          propertyMap[property.location] = {
+            color: display_color,
+            playerId: player_id,
+            propertiesOwned: property.properties_owned,
+          };
+        });
+    });
+
     const gameInfo: Game = {
       user: {
         hasJoinedGame,
@@ -154,6 +170,7 @@ const Room = () => {
         info: playersInfo,
         playerSequence: player_sequence,
         properties: monopoly_participant_properties,
+        propertyMap: propertyMap,
       },
       state: game_state,
       currentPlayerTurn: current_player_turn_id,
