@@ -126,6 +126,7 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
                 order={item.order}
                 position={item.position}
                 playersMap={game.players.location}
+                propertyMap={game.players.propertyMap}
               />
             </div>
           );
@@ -150,6 +151,7 @@ const MonopolyBoard: React.FC<MonopolyBoardProps> = ({
                 order={item.order}
                 position={item.position}
                 playersMap={game.players.location}
+                propertyMap={game.players.propertyMap}
               />
             </div>
           );

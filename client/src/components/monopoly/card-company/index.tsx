@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import styles from "./style.module.scss";
-import { CompanyCard } from "@/maps/types";
+import { CompanyCard } from "@/types/monopolyGame";
 import AvatarHolder from "../avatar-holder";
 
 const CardCompany: React.FC<CompanyCard> = ({
@@ -14,6 +14,7 @@ const CardCompany: React.FC<CompanyCard> = ({
   type,
   position,
   playersMap,
+  propertyMap,
 }) => {
   const [width, setWidth] = useState<number>(0);
   const [fontSize, setFontSize] = useState<number>(1);
@@ -63,14 +64,21 @@ const CardCompany: React.FC<CompanyCard> = ({
                 `}
       >
         <div className={styles.priceContainer}>
-          <div
-            className={styles.priceTag}
-            style={{
-              fontSize: `${fontSize * 0.8}em`,
-            }}
-          >
-            {price}
-          </div>
+          {propertyMap[position] === undefined ? (
+            <div
+              className={styles.priceTag}
+              style={{
+                fontSize: `${fontSize * 0.8}em`,
+              }}
+            >
+              {price}
+            </div>
+          ) : (
+            <div
+              style={{ backgroundColor: propertyMap[position].color }}
+              className={styles.colorContainer}
+            />
+          )}
         </div>
         <div className={styles.headerContainer}>
           <p

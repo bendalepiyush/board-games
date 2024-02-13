@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import styles from "./style.module.scss";
-import { CountryCard } from "@/maps/types";
+import { CountryCard } from "@/types/monopolyGame";
 import AvatarHolder from "../avatar-holder";
 
 const CardCountry: React.FC<CountryCard> = ({
@@ -13,6 +13,7 @@ const CardCountry: React.FC<CountryCard> = ({
   type,
   position,
   playersMap,
+  propertyMap,
 }) => {
   const [width, setWidth] = useState<number>(0);
   const [fontSize, setFontSize] = useState<number>(1);
@@ -61,7 +62,7 @@ const CardCountry: React.FC<CountryCard> = ({
     resizeObserver.observe(ref.current);
 
     return () => resizeObserver.disconnect();
-  }, []);
+  });
 
   return (
     <div className={styles.container} ref={ref}>
@@ -85,14 +86,21 @@ const CardCountry: React.FC<CountryCard> = ({
                 `}
       >
         <div className={styles.priceContainer}>
-          <div
-            className={styles.priceTag}
-            style={{
-              fontSize: `${fontSize * 0.8}em`,
-            }}
-          >
-            {price}
-          </div>
+          {propertyMap[position] === undefined ? (
+            <div
+              className={styles.priceTag}
+              style={{
+                fontSize: `${fontSize * 0.8}em`,
+              }}
+            >
+              {price}
+            </div>
+          ) : (
+            <div
+              style={{ backgroundColor: propertyMap[position].color }}
+              className={styles.colorContainer}
+            />
+          )}
         </div>
         <div className={styles.headerContainer} style={headerContainer}>
           <p

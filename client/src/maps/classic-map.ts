@@ -1,6 +1,6 @@
-import { CLASSIC_MAP_CARD } from "./types";
+import { ClassicMapCard } from "@/types/monopolyGame";
 
-export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
+export const CLASSIC_MAP: ClassicMapCard[] = [
   {
     type: "Center",
     order: 13,
@@ -51,6 +51,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 2,
     position: 2,
     playersMap: {},
+    propertyMap: {},
   },
   {
     type: "Surprise",
@@ -73,6 +74,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 4,
     position: 4,
     playersMap: {},
+    propertyMap: {},
   },
   {
     type: "Surprise",
@@ -93,6 +95,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 6,
     position: 6,
     playersMap: {},
+    propertyMap: {},
   },
   {
     backgroundImageUrl:
@@ -106,6 +109,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 7,
     position: 7,
     playersMap: {},
+    propertyMap: {},
   },
   {
     type: "Surprise",
@@ -128,6 +132,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 9,
     position: 9,
     playersMap: {},
+    propertyMap: {},
   },
   {
     backgroundImageUrl:
@@ -141,6 +146,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 10,
     position: 10,
     playersMap: {},
+    propertyMap: {},
   },
   {
     backgroundImageUrl:
@@ -154,6 +160,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 14,
     position: 12,
     playersMap: {},
+    propertyMap: {},
   },
   {
     backgroundImageUrl: "",
@@ -165,6 +172,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 16,
     position: 13,
     playersMap: {},
+    propertyMap: {},
   },
   {
     backgroundImageUrl:
@@ -178,6 +186,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 18,
     position: 14,
     playersMap: {},
+    propertyMap: {},
   },
   {
     backgroundImageUrl:
@@ -191,6 +200,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 20,
     position: 15,
     playersMap: {},
+    propertyMap: {},
   },
   {
     backgroundImageUrl: "",
@@ -202,6 +212,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 22,
     position: 16,
     playersMap: {},
+    propertyMap: {},
   },
   {
     backgroundImageUrl:
@@ -215,6 +226,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 24,
     position: 17,
     playersMap: {},
+    propertyMap: {},
   },
   {
     type: "Surprise",
@@ -237,6 +249,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 28,
     position: 19,
     playersMap: {},
+    propertyMap: {},
   },
   {
     backgroundImageUrl:
@@ -250,6 +263,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 30,
     position: 20,
     playersMap: {},
+    propertyMap: {},
   },
   {
     backgroundImageUrl:
@@ -263,6 +277,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 40,
     position: 22,
     playersMap: {},
+    propertyMap: {},
   },
   {
     type: "Surprise",
@@ -285,6 +300,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 38,
     position: 24,
     playersMap: {},
+    propertyMap: {},
   },
   {
     backgroundImageUrl:
@@ -298,6 +314,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 37,
     position: 25,
     playersMap: {},
+    propertyMap: {},
   },
   {
     backgroundImageUrl: "",
@@ -309,6 +326,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 36,
     position: 26,
     playersMap: {},
+    propertyMap: {},
   },
   {
     backgroundImageUrl:
@@ -322,6 +340,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 35,
     position: 27,
     playersMap: {},
+    propertyMap: {},
   },
   {
     backgroundImageUrl:
@@ -335,6 +354,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 34,
     position: 28,
     playersMap: {},
+    propertyMap: {},
   },
   {
     backgroundImageUrl: "",
@@ -346,6 +366,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 33,
     position: 29,
     playersMap: {},
+    propertyMap: {},
   },
   {
     backgroundImageUrl:
@@ -359,6 +380,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 32,
     position: 30,
     playersMap: {},
+    propertyMap: {},
   },
   {
     backgroundImageUrl:
@@ -372,6 +394,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 29,
     position: 32,
     playersMap: {},
+    propertyMap: {},
   },
   {
     backgroundImageUrl:
@@ -385,6 +408,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 27,
     position: 33,
     playersMap: {},
+    propertyMap: {},
   },
   {
     type: "Surprise",
@@ -407,6 +431,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 23,
     position: 35,
     playersMap: {},
+    propertyMap: {},
   },
   {
     backgroundImageUrl: "",
@@ -418,6 +443,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 21,
     position: 36,
     playersMap: {},
+    propertyMap: {},
   },
   {
     type: "Surprise",
@@ -440,6 +466,7 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 17,
     position: 38,
     playersMap: {},
+    propertyMap: {},
   },
   {
     type: "Surprise",
@@ -462,5 +489,6 @@ export const CLASSIC_MAP: CLASSIC_MAP_CARD[] = [
     order: 12,
     position: 40,
     playersMap: {},
+    propertyMap: {},
   },
 ];

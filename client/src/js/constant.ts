@@ -15,6 +15,7 @@ export const DEFAULT_MONOPOLY_GAME_INFO: Game = {
     info: [],
     playerSequence: [],
     properties: [],
+    propertyMap: {},
   },
   settings: {
     privateRoom: true,
